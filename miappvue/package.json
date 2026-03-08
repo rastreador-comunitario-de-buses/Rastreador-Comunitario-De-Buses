@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "leaflet": "^1.9.4",
+    "leaflet-rotatedmarker": "^0.2.0",
+    "leaflet-routing-machine": "^3.2.12",
     "vue": "^3.2.13",
     "vue-router": "^4.6.4"
   },

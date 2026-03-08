@@ -6,6 +6,7 @@
             <div class="logo">LOGOO</div>
             <ul class="opc">Inicio</ul>
             <ul class="opc">Descripcion</ul>
+            <ul class="opc">Mapa</ul> //lo hice yo mejia 
             <ul class="opc">Ver transporte</ul>
         </div>
         <button class="boton-sesion" v-if="!logueado" v-on:click="MostrarLogin">Iniciar sesion</button>
