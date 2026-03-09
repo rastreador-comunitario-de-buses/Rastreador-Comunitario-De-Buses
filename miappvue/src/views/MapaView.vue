@@ -3,12 +3,13 @@
     <h1>Mapa en tiempo real</h1>
     <div id="map"></div>
      <!-- Panel de información del bus seleccionado -->
-    <div v-if="busSeleccionado" class="panelBus">
+    <div v-if="busSeleccionado" class="panelBus" >
       <h2>🚌 Bus {{ busSeleccionado.ruta }}</h2>
       <p><b>Conductor:</b> {{ busSeleccionado.conductor }}</p>
       <p><b>Placa:</b> {{ busSeleccionado.placa }}</p>
       <p><b>Capacidad:</b> {{ busSeleccionado.capacidad }} pasajeros</p>
       <button @click="cerrarPanel">Cerrar</button>
+      <button v-show="confirmarSesionMapa" v-on:click="guardarRuta">Guardar ruta</button>
     </div>
   </div>
 </template>
@@ -29,6 +30,7 @@ export default {
       capaRutas: null,
       rutaActiva: null,
       intervalosBuses: [],
+      confirmarSesionMapa: localStorage.getItem('verificarGuardarRuta')
     };
   },
   mounted() {
@@ -81,6 +83,22 @@ export default {
     this.map.on("locationerror", () => alert("No se pudo obtener tu ubicación. Activa el GPS."));
   },
   methods: {
+    guardarRuta: function(){
+      const nombreAsignado = prompt("¿Como quieres que se llame esta ruta?")
+      if (nombreAsignado!==""){
+        const almacenarRutas= {
+          id: Date.now(),
+          nombreRuta: nombreAsignado,
+          rutaBus: this.busSeleccionado.ruta,
+          placa: this.busSeleccionado.placa,
+        }
+
+        const listaGuardarRuta = JSON.parse(localStorage.getItem('rutasMasUsadas')) || [];
+        listaGuardarRuta.push(almacenarRutas)
+        localStorage.setItem('rutasMasUsadas', JSON.stringify(listaGuardarRuta))
+        alert("Su ruta se guardo correctamente")
+      }
+    },
     // metodo para cerrar el panel de información del bus y eliminar la ruta activa del mapa
     cerrarPanel() {
       this.busSeleccionado = null;
