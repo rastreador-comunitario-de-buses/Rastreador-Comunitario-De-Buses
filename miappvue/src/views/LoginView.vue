@@ -44,6 +44,7 @@ export default {
         this.$router.push("/")
       }
       else{
+        localStorage.setItem('SesionActiva', 'false')
         alert("Usuario o contraseña incorrectos")
       }
     },
