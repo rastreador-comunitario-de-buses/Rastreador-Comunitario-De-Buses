@@ -163,7 +163,7 @@ export default {
 }
 
 .boton-sesion {
-  background:#2563eb;
+  background:#1387d4;
   border:none;
   padding:6px 12px;
   border-radius:5px;
@@ -172,7 +172,7 @@ export default {
 }
 
 .boton-registro {
-  background:#10b981;
+  background:#b9a810;
   border:none;
   padding:6px 12px;
   border-radius:5px;
