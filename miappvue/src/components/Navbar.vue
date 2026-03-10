@@ -11,20 +11,7 @@
   </div>
 
   <nav class="contenedor-menu">
-    <!-- CAMILO2 -- Puse nuevos links que funcionan mediante botones y simplemente pase el componente del menu
-     a este(dejare el componente del menuComponente por si acaso) -->
-      
-    <router-link to="/login">
-      <button class="boton-sesion" v-if="!logueado">Iniciar sesion</button>
-    </router-link>
-    <router-link to="/registro" class="router-registro">
-      <button v-if="!logueado" class="boton-registro">Registrarse</button>
-    </router-link>
-
-
-    <!-- Menu rayitas para que dentro pueda interacturar con su perfil y administrar sus rutas jijiji -->
-    <section class="menu-rayitas">
-
+        <section class="menu-rayitas">
         <div class="menu-hamburguesa" v-if="logueado" v-on:click="mostrarMenuHmburguesa">
             <i class='bx bx-menu'></i>
         </div>
@@ -44,6 +31,18 @@
         </div>
 
     </section>
+    <!-- CAMILO2 -- Puse nuevos links que funcionan mediante botones y simplemente pase el componente del menu
+     a este(dejare el componente del menuComponente por si acaso) -->
+      
+    <router-link to="/login">
+      <button class="boton-sesion" v-if="!logueado">Iniciar sesion</button>
+    </router-link>
+    <router-link to="/registro" class="router-registro">
+      <button v-if="!logueado" class="boton-registro">Registrarse</button>
+    </router-link>
+
+
+    <!-- Menu rayitas para que dentro pueda interacturar con su perfil y administrar sus rutas jijiji -->
 
   </nav>
 
