@@ -2,8 +2,11 @@
 
 <header class="header-principal">  
 
-  <div class="menuDesplegable">
-      <router-link to="/perfil" v-show="contenidoMenu">
+  <div class="menu-hamburguesa" v-if="logueado" v-on:click="mostrarMenuHmburguesa">
+            <i class='bx bx-menu'></i>
+
+            <div class="menuDesplegable" v-show="contenidoMenu">
+      <router-link to="/perfil" >
         <ul v-on:click="mostrarMenuHmburguesa">Perfil</ul>
       </router-link>
       <router-link to="/administrarRutas" v-show="contenidoMenu">
@@ -12,9 +15,6 @@
         </ul>
       </router-link>
   </div>
-
-  <div class="menu-hamburguesa" v-if="logueado" v-on:click="mostrarMenuHmburguesa">
-            <i class='bx bx-menu'></i>
         </div>
 
   <div class="logo" v-on:click="volverInicio">
@@ -185,17 +185,20 @@ export default {
 }
 
 .menu-hamburguesa {
+  position: relative;
   font-size:26px;
   color:white;
   cursor:pointer;
 }
 
 .menuDesplegable {
-  position:absolute;
-  right:0;
+  position: absolute;
+  top: 100%;
+  left:0;
   top:35px;
   background:white;
   border-radius:6px;
+  width: 190px;
   box-shadow:0px 5px 10px rgba(0,0,0,0.15);
   padding:10px;
 }
