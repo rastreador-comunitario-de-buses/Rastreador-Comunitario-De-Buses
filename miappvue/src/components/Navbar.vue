@@ -60,11 +60,11 @@
     </span>
 </div>
 
-
-
 </template>
 
+
 <script>
+
 export default {
   name: "AppNavbar",
   data() {
@@ -146,20 +146,6 @@ export default {
   cursor: pointer;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .texto-rodante {
     width: 100%;
     margin: auto;
@@ -184,11 +170,6 @@ export default {
     100% { transform: translateX(-100%); }
 }
 
-
-
-
-
-
 .contenedor-menu {
   display:flex;
   align-items:center;
@@ -207,21 +188,19 @@ export default {
 }
 
 .boton-sesion {
-  background:#1387d4;
-  border:none;
-  padding:6px 12px;
-  border-radius:5px;
-  color:white;
-  cursor:pointer;
+ padding: 8px 12px;
+ border-radius: 15px;
+ background-color: #ffd500;
+ color: black;
+ cursor: pointer;
 }
 
 .boton-registro {
-  background:#b9a810;
-  border:none;
-  padding:6px 12px;
-  border-radius:5px;
-  color:white;
-  cursor:pointer;
+  padding: 8px 12px;
+  border-radius: 15px;
+  background-color: #ffd500;
+  color: black;
+  cursor: pointer;
 }
 
 .menu-rayitas {

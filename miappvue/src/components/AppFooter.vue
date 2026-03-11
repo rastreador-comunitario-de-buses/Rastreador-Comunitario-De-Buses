@@ -43,13 +43,14 @@
     }
 </script>
 
-<style>
-    .footer {
+<style scoped>
+
+.footer {
     background-color: #1e3a8a;
     color: #bbb;
     font-family: Arial, Helvetica, sans-serif;
     padding: 20px 20px;
-    margin-top: 100px;
+   
 }
 
 .footer-contenido {
@@ -88,6 +89,7 @@
 .footer-ubicaciones p {
     margin: 6px 0;
     font-size: 14px;
+    color: white;
 }
 
 .footer-derechos{
@@ -96,6 +98,6 @@
     margin-top: 20px;
     padding-top: 15px;
     font-size: 12px;
-    color: #aaa;
+    color: white;
 }
 </style>
