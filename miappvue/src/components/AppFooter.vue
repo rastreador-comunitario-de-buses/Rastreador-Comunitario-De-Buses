@@ -21,10 +21,6 @@
     <h4>Ubicaciones</h4>
     <div class="footer-ubicaciones">
         <p>Santa Marta</p>
-        <p>Barranquilla</p>
-        <p>Bucaramanga</p>
-        <p>Medellín</p>
-        <p>Bogotá</p>
     </div>
 </div>
 

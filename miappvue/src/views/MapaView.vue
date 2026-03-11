@@ -48,6 +48,7 @@ export default {
       capaRutas: null,
       rutaActiva: null,
       intervalosBuses: [],
+      busesMarkers: [],
       confirmarSesionMapa: localStorage.getItem('verificarGuardarRuta') === 'true',
       cantidadBuses: buses.length
       
@@ -85,6 +86,12 @@ export default {
       const marker = L.marker(bus.posicion, { icon: busIcon, rotationAngle: 0 }).addTo(this.map);
       marker.bindTooltip(bus.ruta, { permanent: true, direction: "top" });
 
+      this.busesMarkers.push({
+        bus: bus,
+        marker: marker,
+        ruta: ruta
+      });
+
       // Click en bus para mostrar panel
       marker.on("click", () => {
         this.busSeleccionado = bus;
@@ -104,6 +111,20 @@ export default {
       L.circle(e.latlng, { radius: e.accuracy }).addTo(this.map);
     });
     this.map.on("locationerror", () => alert("No se pudo obtener tu ubicación. Activa el GPS."));
+
+    // Obtener la ruta seleccionada desde la vista de rutas guardadas
+    const rutaBus = this.$route.query.rutaBus;
+
+    if(rutaBus){
+      const rutaEncontrada = rutas.find(r => r.nombre.startsWith(rutaBus))
+      if(rutaEncontrada){
+        this.mostrarRuta(rutaEncontrada);
+
+        setTimeout(() => {
+          this.enfocarBus(rutaBus);
+        }, 1000);
+      }
+    }
   },
   methods: {
     mostrarBusesActivos: function(){
@@ -163,6 +184,27 @@ export default {
           styles: [{ color: "#1d4ed8", opacity: 0.95, weight: 6}],
         },
       }).addTo(this.map);
+    },
+    //enfoque en la ruta del bus seleccionado
+    enfocarBus(rutaBus){
+      const busEncontrado = this.busesMarkers.find(b => b.bus.ruta.startsWith(rutaBus));
+
+      if(!busEncontrado) return;
+
+      const marker = busEncontrado.marker;
+
+      this.map.setView(marker.getLatLng(), 15, { animate: true });
+
+      this.busSeleccionado = busEncontrado.bus;
+
+      const iconoResaltado = L.icon({
+        iconUrl: "https://cdn-icons-png.flaticon.com/512/3448/3448339.png",
+        iconSize: [50, 50],
+        iconAnchor: [25, 25],
+        className: "icono-resaltado"
+      });
+
+      marker.setIcon(iconoResaltado);
     },
     // metodo para animar el bus a lo largo de su ruta utilizando las coordenadas de la ruta y actualizando la posición del marcador cada cierto tiempo
     animarBus(marker, ruta) {
