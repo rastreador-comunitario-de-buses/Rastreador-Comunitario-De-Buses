@@ -10,7 +10,7 @@
         revisa rutas activas y organiza mejor tu tiempo
         en el transporte público.
       </p>
-      <router-link to="/mapa" @:click="validacionSesionMapa">
+      <router-link to="/mapa" v-on:click="validacionSesionMapa">
         <button class="btn-verRutas">Ver rutas</button>
       </router-link>
     </div>

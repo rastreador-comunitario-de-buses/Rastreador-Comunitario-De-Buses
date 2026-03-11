@@ -6,9 +6,9 @@
             <i class='bx bx-menu'></i>
 
             <div class="menuDesplegable" v-show="contenidoMenu">
-      <router-link to="/perfil" >
-        <ul v-on:click="mostrarMenuHmburguesa">Perfil</ul>
-      </router-link>
+        <div v-on:click="ejecuarValidacionPerfil" >
+        <ul v-on:click="mostrarMenuHmburguesa" class="texto-info">Perfil</ul>
+        </div>
       <div  v-on:click="ejecuarValidacion" v-show="contenidoMenu">
         <ul v-on:click="mostrarMenuHmburguesa" class="texto-info">
           Administrar rutas
@@ -86,6 +86,15 @@ export default {
   methods: { 
     volverInicio: function(){
       this.$router.push("/")
+    },
+    ejecuarValidacionPerfil:function(){
+      if(this.logueado === true){
+        this.$router.push("/perfil")
+      }
+      else{
+        this.$router.push("/login")
+      }
+
     },
     ejecuarValidacion: function(){
       if(this.logueado === true){

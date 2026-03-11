@@ -17,7 +17,7 @@
     </div>
 
     <div class="botones">
-        <button class="btn-ver" @click="verEnMapa(ruta)">Ver en Mapa</button>
+        <button class="btn-ver" v-on:click="verEnMapa(ruta)">Ver en Mapa</button>
         <button class="btn-borrar" v-on:click="eliminarRuta(ruta.id)">Eliminar</button>
     </div>
 </div>
