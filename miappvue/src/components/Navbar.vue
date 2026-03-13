@@ -133,12 +133,14 @@ export default {
 }
 
 .header-principal {    /* Este es el header principal, donde van las opciones de navegación (CELEDÓN)*/
-  display:flex;
-  align-items:center;
-  background:#1e3a8a;
-  padding:6px 90px;
-  box-shadow:0px 3px 10px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  background: #1e3a8a;
+  padding: 6px 90px;
+  box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;   /* ← necesario para que z-index funcione */
+  z-index: 99999;
 }
 
 .logo {
@@ -229,17 +231,17 @@ export default {
 
 .menuDesplegable {
   position: absolute;
-  top: 100%;
-  left:0;
-  top:35px;
-  background:white;
-  border-radius:6px;
+  left: 0;
+  top: 35px;
+  background: white;
+  border-radius: 6px;
   width: 190px;
-  box-shadow:0px 5px 10px rgba(0,0,0,0.15);
-  padding:10px;
+  box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
+  padding: 10px;
+  z-index: 9999;
 }
 
-.menuDesplegable u l{
+.menuDesplegable ul{
   list-style:none;
   padding:5px 10px;
   cursor:pointer;  

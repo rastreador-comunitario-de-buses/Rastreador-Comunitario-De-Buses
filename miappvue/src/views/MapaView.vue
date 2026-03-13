@@ -1,370 +1,500 @@
 <template>
   <div class="contenedor">
     <h1>Mapa en tiempo real</h1>
+
+    <div class="buscador">
+      <input v-model="filtroRuta" @input="buscarRuta" placeholder="🔎 Buscar ruta (ej: SM101)" />
+      <button @click="irAMiUbicacion">📍 Mi ubicación</button>
+    </div>
+
     <div class="stats">
+      <div class="mini-carta" v-on:click="mostrarBusesActivos">
+        <div class="icon">🚌</div>
+        <h2>{{ cantidadBuses }}</h2>
+        <p>Buses activos</p>
+      </div>
 
-  <div class="mini-card" v-on:click="mostrarBusesActivos">
-    <div class="icon">🚌</div>
-    <h2>{{cantidadBuses}}</h2>
-    <p>Buses activos</p>
-  </div>
+      <div class="mini-carta" v-on:click="verRutasDisponibles">
+        <div class="icon">🗺</div>
+        <h2>{{ rutasDisponibles }}</h2>
+        <p>Rutas disponibles</p>
+      </div>
+    </div>
 
-  <div class="mini-card" v-on:click="mostrarBusesActivos">
-    <div class="icon">🗺</div>
-    <h2>{{cantidadBuses}}</h2>
-    <p>Rutas disponibles</p>
-  </div>
-
-</div>
     <div id="map"></div>
-     <!-- Panel de información del bus seleccionado -->
-    <div v-if="busSeleccionado" class="panelBus" >
-<div class="contenedor-icono-reportes" v-on:click="irAReportes" v-show="confirmarSesionMapa">
-  <i class='bx bx-chat'></i>  
-</div>
+
+    <div v-if="busSeleccionado" class="panelBus">
+
+      <div class="contenedor-icono-reportes" v-on:click="irAReportes" v-show="confirmarSesionMapa">
+        <i class='bx bx-chat'></i>
+      </div>
+
       <h2>🚌 Bus {{ busSeleccionado.ruta }}</h2>
       <p><b>Conductor:</b> {{ busSeleccionado.conductor }}</p>
       <p><b>Placa:</b> {{ busSeleccionado.placa }}</p>
       <p><b>Capacidad:</b> {{ busSeleccionado.capacidad }} pasajeros</p>
+
       <button @click="cerrarPanel">Cerrar</button>
       <button v-show="confirmarSesionMapa" v-on:click="guardarRuta">Guardar ruta</button>
+
     </div>
   </div>
 </template>
 
 <script>
+
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-rotatedmarker";
 import "leaflet-routing-machine";
 import { rutas } from "../data/rutas.js";
 import { buses } from "@/data/buses.js";
+import { paradas } from "@/data/paradas.js";
 
 export default {
+
   data() {
     return {
       map: null,
       busSeleccionado: null,
-      capaRutas: null,
       rutaActiva: null,
       intervalosBuses: [],
       busesMarkers: [],
       confirmarSesionMapa: localStorage.getItem('verificarGuardarRuta') === 'true',
-      cantidadBuses: buses.length
-      
-    };
+      cantidadBuses: buses.length,
+      rutasDisponibles: rutas.length,
+      usuarioUbicacion: null,
+      paradaCercanaMarker: null,
+      filtroRuta: "",
+      coloresRuta: [
+        "#2563eb",
+        "#dc2626",
+        "#16a34a",
+        "#9333ea",
+        "#f59e0b",
+        "#0891b2"
+      ]
+    }
   },
+
   mounted() {
-    // Centrar el mapa en Santa Marta
     const santaMartaBounds = L.latLngBounds([11.00, -74.28], [11.32, -74.12]);
+
     this.map = L.map("map", {
       maxBounds: santaMartaBounds,
       maxBoundsViscosity: 0.9,
-      minZoom: 11,
-      zoomAnimation: false,
+      minZoom: 11
     }).setView([11.18, -74.21], 12);
 
-    //Mapa nuevo actualizado con tiles de Esri para mejor rendimiento y apariencia
-    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
-      attribution: "Tiles Esri",
-      maxZoom: 19,
-    }).addTo(this.map);
+    L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+      { maxZoom: 19 }
+    ).addTo(this.map);
 
-    this.capaRutas = L.layerGroup().addTo(this.map);
-
-    // Crear y animar todos los buses
-    buses.forEach(bus => {
-      const ruta = rutas.find(r => r.nombre.startsWith(bus.ruta));
+    buses.forEach((bus, index) => {
+      const codigoBus = bus.ruta.split(' ')[0];
+      const ruta = rutas.find(r => r.nombre.startsWith(codigoBus));
       if (!ruta) return;
 
       const busIcon = L.icon({
         iconUrl: "https://cdn-icons-png.flaticon.com/512/3448/3448339.png",
         iconSize: [40, 40],
-        iconAnchor: [20, 20],
+        iconAnchor: [20, 20]
       });
 
-      const marker = L.marker(bus.posicion, { icon: busIcon, rotationAngle: 0 }).addTo(this.map);
+      const marker = L.marker(bus.posicion, {
+        icon: busIcon,
+        rotationAngle: 0
+      }).addTo(this.map);
+
       marker.bindTooltip(bus.ruta, { permanent: true, direction: "top" });
 
-      this.busesMarkers.push({
-        bus: bus,
-        marker: marker,
-        ruta: ruta
-      });
+      this.busesMarkers.push({ bus, marker, ruta });
 
-      // Click en bus para mostrar panel
       marker.on("click", () => {
         this.busSeleccionado = bus;
-        this.mostrarRuta(ruta);
+        this.mostrarRuta(ruta, index);
+        marker.setZIndexOffset(1000);
       });
 
-      // Animar bus
       this.animarBus(marker, ruta);
     });
 
-    // Ubicación usuario
-    if(this.map){
-      this.map.locate({ setView: true, maxZoom: 16 });
-    }
-    this.map.on("locationfound", e => {
-      L.marker(e.latlng).addTo(this.map).bindPopup("Tú estás aquí 📍").openPopup();
-      L.circle(e.latlng, { radius: e.accuracy }).addTo(this.map);
+    this.map.locate({ setView: true, maxZoom: 16 });
+
+    const self = this;
+
+    this.map.on("locationfound", function (e) {
+      self.usuarioUbicacion = e.latlng;
+
+      L.marker(e.latlng)
+        .addTo(self.map)
+        .bindPopup("📍 Tu estás aquí")
+        .openPopup();
+
+      L.circle(e.latlng, { radius: e.accuracy }).addTo(self.map);
+
+      self.buscarBusMasCercano();
+      self.buscarParadaMasCercana();
     });
-    this.map.on("locationerror", () => alert("No se pudo obtener tu ubicación. Activa el GPS."));
 
-    // Obtener la ruta seleccionada desde la vista de rutas guardadas
-    const rutaBus = this.$route.query.rutaBus;
-
-    if(rutaBus){
-      const rutaEncontrada = rutas.find(r => r.nombre.startsWith(rutaBus))
-      if(rutaEncontrada){
-        this.mostrarRuta(rutaEncontrada);
-
-        setTimeout(() => {
-          this.enfocarBus(rutaBus);
-        }, 1000);
-      }
-    }
+    this.map.on("locationerror", () => {
+      alert("No se pudo obtener tu ubicación. Activa el GPS");
+    });
   },
-  methods: {
-    mostrarBusesActivos: function(){
+
+  methods: {                                        // ← ABRE methods
+
+    mostrarBusesActivos() {
       this.$router.push("/busesActivos")
     },
-    irAReportes: function(){
+
+    irAReportes() {
       this.$router.push("/reportes")
     },
-    //Guarda la ruta
-    guardarRuta: function(){
-      const nombreAsignado = prompt("¿Como quieres que se llame esta ruta?")
-      if (nombreAsignado && nombreAsignado.trim() !== "") {
-        const almacenarRutas= {
-          id: Date.now(),
-          nombreRuta: nombreAsignado,
-          rutaBus: this.busSeleccionado.ruta,
-          placa: this.busSeleccionado.placa,
+
+    verRutasDisponibles() {
+      this.$router.push("/administrarRutas")
+    },
+
+    irAMiUbicacion() {
+      if (!this.usuarioUbicacion) return;
+      this.map.setView(this.usuarioUbicacion, 16, { animate: true });
+    },
+
+    mostrarRuta(ruta, index) {
+      const coordenadas = ruta.puntos.map(p => L.latLng(p[0], p[1]));
+
+      if (this.rutaActiva) {
+        this.rutaActiva.remove();
+        this.rutaActiva = null;
+      }
+
+      if (!this.map) return;
+
+      const color = this.coloresRuta[index % this.coloresRuta.length];
+
+      this.rutaActiva = L.Routing.control({
+        waypoints: coordenadas,
+        router: L.Routing.osrmv1({
+          serviceUrl: "https://router.project-osrm.org/route/v1"
+        }),
+        addWaypoints: false,
+        draggableWaypoints: false,
+        show: false,
+        createMarker: () => null,
+        lineOptions: {
+          styles: [{ color: color, weight: 6, opacity: 0.95 }]
+        }
+      }).addTo(this.map);
+
+      this.rutaActiva.on('routingerror', () => { });
+    },
+
+    buscarBusMasCercano() {
+      if (!this.usuarioUbicacion) return;
+
+      let busMasCercano = null;
+      let distanciaMinima = Infinity;
+
+      this.busesMarkers.forEach(b => {
+        const distancia = this.map.distance(
+          this.usuarioUbicacion,
+          b.marker.getLatLng()
+        );
+        if (distancia < distanciaMinima) {
+          distanciaMinima = distancia;
+          busMasCercano = b;
+        }
+      });
+
+      if (!busMasCercano) return;
+
+      const distanciaKm = (distanciaMinima / 1000).toFixed(2);
+      busMasCercano.marker.bindPopup(
+        `🚍 Bus ${busMasCercano.bus.ruta}<br>📏 ${distanciaKm} km`
+      ).openPopup();
+    },
+
+    buscarParadaMasCercana() {
+      if (!this.usuarioUbicacion) return;
+
+      let paradaMasCercana = null;
+      let distanciaMinima = Infinity;
+
+      paradas.forEach(parada => {
+        const distancia = this.map.distance(
+          this.usuarioUbicacion,
+          parada.coord
+        );
+        if (distancia < distanciaMinima) {
+          distanciaMinima = distancia;
+          paradaMasCercana = parada;
+        }
+      });
+
+      if (!paradaMasCercana) return;
+
+      if (this.paradaCercanaMarker) {
+        this.map.removeLayer(this.paradaCercanaMarker);
+      }
+
+      const icono = L.icon({
+        iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+        iconSize: [40, 40]
+      });
+
+      this.paradaCercanaMarker = L.marker(
+        paradaMasCercana.coord,
+        { icon: icono }
+      ).addTo(this.map);
+
+      const distancia = distanciaMinima.toFixed(0);
+      this.paradaCercanaMarker.bindPopup(
+        `🛑 <b>Parada más cercana</b><br>
+        ${paradaMasCercana.nombre}<br>
+        📏 ${distancia} metros`
+      ).openPopup();
+    },
+
+    animarBus(marker, ruta) {
+      const puntos = ruta.puntos.map(p => L.latLng(p[0], p[1]));
+      let i = 0;
+
+      const moverAlSiguiente = () => {
+        if (!this.map) return;
+
+        const actual = puntos[i];
+        const siguiente = puntos[(i + 1) % puntos.length];
+
+        const angulo = Math.atan2(
+          siguiente.lng - actual.lng,
+          siguiente.lat - actual.lat
+        ) * (180 / Math.PI);
+
+        marker.setLatLng(siguiente);
+
+        if (marker.setRotationAngle) {
+          marker.setRotationAngle(angulo);
         }
 
-        const listaGuardarRuta = JSON.parse(localStorage.getItem('rutasMasUsadas')) || [];
-        listaGuardarRuta.push(almacenarRutas)
-        localStorage.setItem('rutasMasUsadas', JSON.stringify(listaGuardarRuta))
-        alert("Su ruta se guardo correctamente")
-      }
+        i = (i + 1) % puntos.length;
+      };
+
+      const intervalo = setInterval(moverAlSiguiente, 1500);
+      this.intervalosBuses.push(intervalo);
     },
-    // metodo para cerrar el panel de información del bus y eliminar la ruta activa del mapa
+
+    buscarRuta() {
+      if (!this.filtroRuta) return;
+
+      const texto = this.filtroRuta.toUpperCase();
+      const busEncontrado = this.busesMarkers.find(b =>
+        b.bus.ruta.toUpperCase().includes(texto)
+      );
+
+      if (!busEncontrado) return;
+
+      this.map.setView(busEncontrado.marker.getLatLng(), 16, { animate: true });
+      busEncontrado.marker.openPopup();
+      this.busSeleccionado = busEncontrado.bus;
+    },
+
     cerrarPanel() {
       this.busSeleccionado = null;
+
       if (this.rutaActiva) {
         this.rutaActiva.remove();
         this.rutaActiva = null;
       }
     },
 
-    // metodo para mostrar la ruta del bus seleccionado en el mapa utilizando Leaflet Routing Machine
-    mostrarRuta(ruta) {
-      const coordenadas = ruta.puntos.map(p => L.latLng(p[0], p[1]));
+    guardarRuta() {
+      if (!this.busSeleccionado) return;
 
-      if(this.rutaActiva){
-        this.rutaActiva.remove();
-        this.rutaActiva = null;
-      }
+      const nombreRuta = prompt("📝 Ponle un nombre a esta ruta (ej: Al trabajo, A la universidad):");
+      if (!nombreRuta || nombreRuta.trim() === "") return;
 
-      this.rutaActiva = L.Routing.control({
-        waypoints: coordenadas,
-        router: L.Routing.osrmv1({
-          serviceUrl: "https://router.project-osrm.org/route/v1",
-        }),
-        addWaypoints: false,
-        draggableWaypoints: false,
-        routeWhileDragging: false,
-        show: false,
-        itinerary: false,
-        collapsible: true,
-        createMarker: () => null,
-        lineOptions: {
-          styles: [{ color: "#1d4ed8", opacity: 0.95, weight: 6}],
-        },
-      }).addTo(this.map);
-    },
-    //enfoque en la ruta del bus seleccionado
-    enfocarBus(rutaBus){
-      const busEncontrado = this.busesMarkers.find(b => b.bus.ruta.startsWith(rutaBus));
+      const rutasGuardadas = JSON.parse(localStorage.getItem('rutasMasUsadas')) || [];
 
-      if(!busEncontrado) return;
+      const nuevaRuta = {
+        id: Date.now(),
+        nombreRuta: nombreRuta.trim(),
+        rutaBus: this.busSeleccionado.ruta,
+        placa: this.busSeleccionado.placa,
+        conductor: this.busSeleccionado.conductor,
+        capacidad: this.busSeleccionado.capacidad
+      };
 
-      const marker = busEncontrado.marker;
+      rutasGuardadas.push(nuevaRuta);
+      localStorage.setItem('rutasMasUsadas', JSON.stringify(rutasGuardadas));
+      alert("✅ Ruta guardada correctamente como: " + nuevaRuta.nombreRuta);
+    }
 
-      this.map.setView(marker.getLatLng(), 15, { animate: true });
+  },                                                // ← CIERRA methods
 
-      this.busSeleccionado = busEncontrado.bus;
-
-      const iconoResaltado = L.icon({
-        iconUrl: "https://cdn-icons-png.flaticon.com/512/3448/3448339.png",
-        iconSize: [50, 50],
-        iconAnchor: [25, 25],
-        className: "icono-resaltado"
-      });
-
-      marker.setIcon(iconoResaltado);
-    },
-    // metodo para animar el bus a lo largo de su ruta utilizando las coordenadas de la ruta y actualizando la posición del marcador cada cierto tiempo
-    animarBus(marker, ruta) {
-      const puntos_de_referencia = ruta.puntos.map(p => L.latLng(p[0], p[1]));
-      
-      const router = L.Routing.osrmv1({
-        serviceUrl: "https://router.project-osrm.org/route/v1",
-      });
-      // Obtener la ruta entre los puntos de referencia y animar el bus a lo largo de esa ruta
-      router.route(
-        puntos_de_referencia.map(p => ({latLng: p})),
-        (err, routes) => {
-          
-          if (err) {
-            console.error("Error calculando la ruta:", err);
-            return;
-          }
-
-          const coordenadas = routes[0].coordinates;
-
-          let segmento = 0;
-          let progreso = 0;
-
-          const velocidad = 0.0025; // velocidad del bus
-
-          // Animar el bus moviendo el marcador a lo largo de las coordenadas de la ruta cada 1.2 segundos
-          const intervalo = setInterval(() => {
-
-            if (!this.map) return;
-            if (!marker) return;
-
-            const actual = coordenadas[segmento];
-            const siguiente = coordenadas[(segmento + 1) % coordenadas.length];
-
-            if (!actual || !siguiente) {
-              segmento = 0;
-              progreso = 0;
-              return;
-            }
-
-            //Interpolacion entre puntos para un movimiento suave del bus
-            const lat = actual.lat + (siguiente.lat - actual.lat) * progreso;
-            const lng = actual.lng + (siguiente.lng - actual.lng) * progreso;
-            marker.setLatLng([lat, lng]);
-
-            //rotacion del marcador para que apunte en la dirección del movimiento
-            const dx = siguiente.lng - actual.lng;
-            const dy = siguiente.lat - actual.lat;
-
-            const angulo = Math.atan2(dy, dx) * (180 / Math.PI);
-            marker.setRotationAngle(angulo);
-
-            progreso += velocidad;
-
-            if(progreso >= 1) {
-              progreso = 0;
-              segmento ++;
-            }
-
-            if (segmento >= coordenadas.length - 1) {
-              segmento = 0;
-            }
-
-          }, 30);
-          this.intervalosBuses.push(intervalo);
-        }
-      );
-    },
-  },
-  // metodo para limpiar los intervalos de animación de los buses cuando el componente se desmonta para evitar fugas de memoria
   beforeUnmount() {
     this.intervalosBuses.forEach(i => clearInterval(i));
     this.intervalosBuses = [];
 
-    if(this.map){
+    if (this.map) {
+      this.map.stop();
+
+      if (this.rutaActiva) {
+        this.rutaActiva.off();
+        try {
+          this.rutaActiva.remove();
+          // eslint-disable-next-line no-empty
+        } catch (e) { }
+        this.rutaActiva = null;
+      }
+
+      this.busesMarkers.forEach(b => {
+        b.marker.off();
+        this.map.removeLayer(b.marker);
+      });
+      this.busesMarkers = [];
+
+      if (this.paradaCercanaMarker) {
+        this.map.removeLayer(this.paradaCercanaMarker);
+        this.paradaCercanaMarker = null;
+      }
+
       this.map.off();
       this.map.remove();
       this.map = null;
     }
-  },
-};
+  }
+
+}
 </script>
 
 <style scoped>
-.stats{
+.contenedor {
+  min-height: 100vh;
+  padding: 30px;
+  background: linear-gradient(135deg, #eef5ff, #dbeafe, #eff6ff);
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+.contenedor::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+  opacity: 0.15;
+}
+
+.contenedor::after {
+  content: "";
+  position: absolute;
+  bottom: -120px;
+  right: -120px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #2563eb 0%, transparent 70%);
+  opacity: 0.15;
+}
+
+h1 {
+  text-align: center;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+}
+
+.stats {
   display: flex;
   justify-content: center;
-  gap: 25px;
-  margin: 20px 0;
+  gap: 30px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
 }
 
-.mini-card{
-  width: 300px;
+.mini-carta {
+  width: 260px;
   background: white;
-  border-radius: 12px;
-  padding: 15px;
+  border-radius: 16px;
+  padding: 20px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(12, 65, 190, 0.1);
-  transition: transform 0.2s ease;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08),
+    0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-.mini-card:hover{
-  transform: translateY(-5px);
+.mini-carta:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
 }
 
-.icon{
-  font-size: 28px;
+.icon {
+  font-size: 36px;
+  margin-bottom: 5px;
 }
 
-.mini-card h2{
-  font-size: 28px;
-  margin: 5px 0;
+.mini-carta h2 {
+  font-size: 32px;
+  margin: 6px 0;
+  color: #2563eb;
 }
 
-.mini-card p{
+.mini-carta p {
   font-size: 14px;
-  color: #555;
+  color: #64748b;
 }
-/* estilos para el mapa y el panel de información del bus */
+
 #map {
-  height: 500px;
+  height: 520px;
   width: 100%;
-  border-radius: 15px;
+  border-radius: 18px;
   overflow: hidden;
   border: 3px solid #1e40af;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  transition: 0.3s;
+  margin-bottom: 80px;
+  margin-top: 10px;
 }
 
-.contenedor {
-  background: #f8fbff;
-  min-height: 100vh;
-  padding: 20px;
-}
-
-h1{
-  color: #0f4413;
-  text-align: center;
-  margin-bottom: 20px;
-  font-weight: 600;
+#map:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
 .panelBus {
   position: absolute;
-  top: 120px;
-  right: 20px;
-  width: 260px;
+  top: 130px;
+  right: 25px;
+  width: 280px;
   background: white;
-  padding: 18px;
-  border-radius: 12px;
-  border-top: 5px solid #2563eb;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 14px;
+  border-top: 6px solid #2563eb;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
   z-index: 1000;
+  animation: aparecerPanel 0.35s ease;
 }
-.leaflet-routing-container {
-  display: none !important;
+
+@keyframes aparecerPanel {
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .panelBus h2 {
   color: #1e3a8a;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .panelBus p {
@@ -379,14 +509,16 @@ h1{
   background: #2563eb;
   color: white;
   border: none;
-  padding: 8px;
-  border-radius: 6px;
+  padding: 9px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.2s;
+  font-weight: 500;
+  transition: all 0.2s;
 }
 
 .panelBus button:hover {
   background: #1e40af;
+  transform: scale(1.02);
 }
 
 .panelBus button:last-child {
@@ -405,5 +537,62 @@ h1{
   font-weight: bold;
   border-radius: 6px;
   padding: 4px 8px;
+}
+
+:deep(.leaflet-routing-container) {
+  display: none !important;
+}
+
+.icono-resaltado {
+  filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.7));
+}
+
+.contenedor-icono-reportes {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  background: #2363eb;
+  color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.contenedor-icono-reportes:hover {
+  background: #1e40af;
+  transform: scale(1.1);
+}
+
+.buscador {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.buscador input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 220px;
+}
+
+.buscador button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.buscador button:hover {
+  background: #1e40af;
 }
 </style>

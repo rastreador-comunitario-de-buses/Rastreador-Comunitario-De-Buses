@@ -21,8 +21,6 @@ const routes = [
   { path: "/administrarRutas", component: MostrarRutasView },
   { path: "/reportes", component: ReportesView },
   { path: "/busesActivos", component: BusesActivosView },
-
-
 ]
 
 const router = createRouter({
