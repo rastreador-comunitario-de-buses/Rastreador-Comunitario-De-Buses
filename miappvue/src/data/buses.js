@@ -5,7 +5,7 @@ export const buses = [
         ruta: "SM101 - (Aeropuerto - Santa Rita)",
         conductor: "Carlos Pérez",
         placa: "ABC-123",
-        posicion: [11.2135, -74.2060], // Cerca de Ziruma, mitad de ruta
+        posicion: [11.2055, -74.2265], // Cerca de Ziruma, mitad de ruta
         capacidad: 40
     },
     {
@@ -13,7 +13,7 @@ export const buses = [
         ruta: "SM102 - (Mamatoco - Taganga)",
         conductor: "María Gómez",
         placa: "DEF-456",
-        posicion: [11.2480, -74.1820], // En Timayui, tramo intermedio
+        posicion: [11.2605, -74.1830], // En Timayui, tramo intermedio
         capacidad: 30
     },
     {
@@ -21,7 +21,7 @@ export const buses = [
         ruta: "SM103 - (Universitaria - Gaira - Troncal del Caribe)",
         conductor: "Juan Rodríguez",
         placa: "GHI-789",
-        posicion: [11.1800, -74.2250], // Zona hotelera (Irotama / Estelar)
+        posicion: [11.2055, -74.2265], // Zona hotelera (Irotama / Estelar)
         capacidad: 35
     },
     {
@@ -29,7 +29,7 @@ export const buses = [
         ruta: "SM104 - (Vía a Minca - La Lucha - Ciudad Equidad)",
         conductor: "Ana Martínez",
         placa: "JKL-012",
-        posicion: [11.1950, -74.2000], // Entrada Ciudad Equidad
+        posicion: [11.2055, -74.2265], // Entrada Ciudad Equidad
         capacidad: 25
     },
     {
@@ -37,7 +37,7 @@ export const buses = [
         ruta: "SM105 - (Calle 19 - La Lucha - Av del Ferrocarril)",
         conductor: "Luis Fernández",
         placa: "MNO-345",
-        posicion: [11.2100, -74.2200], // Sector La Lucha, cerca de Gaira
+        posicion: [11.2605, -74.1830], // Sector La Lucha, cerca de Gaira
         capacidad: 20
     },
     {
@@ -141,7 +141,7 @@ export const buses = [
         ruta: "SM118 - Camellón de la Bahía (La Paz – Centro)",
         conductor: "Andrés Martínez",
         placa: "CBH-789",
-        posicion: [11.2500, -74.1900], // Terminal de Gaira
+        posicion: [11.2380, -74.1810], // Terminal de Gaira
         capacidad: 30
     },
     {

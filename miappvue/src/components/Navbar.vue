@@ -6,10 +6,10 @@
         <i class='bx bx-menu' v-on:click="mostrarMenuHmburguesa"></i>
         <div class="menuDesplegable" v-show="contenidoMenu">
           <div v-on:click="ejecuarValidacionPerfil">
-            <ul class="texto-info">Perfil</ul>
+            <ul class="txt-dentro-menuHamburguesa">Perfil</ul>
           </div>
           <div v-on:click="ejecuarValidacion" v-show="contenidoMenu">
-            <ul class="texto-info"> Administrar rutas </ul>
+            <ul class="txt-dentro-menuHamburguesa">Administrar rutas</ul>
           </div>
         </div>
       </div>
@@ -126,7 +126,7 @@ export default {
 
 <style>
 
-* {
+* {                             /* aqui el body (celedon)*/ 
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -135,9 +135,8 @@ export default {
 .header-principal {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Mantiene izquierda y derecha en sus extremos */
+  justify-content: space-between;      /* mantiene izquierda y derecha en sus extremos (celedon)*/
   background: #1e3a8a;
-  padding: 3px 20px; /* Reduje el padding lateral para que no se vea tan apretado */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 3px 140px;
 }
@@ -145,23 +144,22 @@ export default {
 .seccion-izquierda {
   display: flex;
   align-items: center;
-  gap: 20px;                    /* Espacio entre el menú hamburguesa y el logo */
+  gap: 30px;                    /* Espacio entre el menú hamburguesa y el logo (celedon)*/
+
 }
 
 .logo {
   display: flex;
   align-items: center;
- 
 }
 
 .logo-icono {
-  height: 65px;
-  transform: translateY(-5px);
+  height: 65px;                      /* tamaño logo (celedon)*/        
   cursor: pointer;
 }
 
 .logo-texto {
-  height: 48px;
+  height: 48px;                       /* tamaño tipografia logo (celedon)*/   
   cursor: pointer;
 }
 
@@ -171,8 +169,7 @@ export default {
   font-weight: bold;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-right: 10px;
+  margin-right: 60px;
 }
 
 .texto-rodante {
@@ -189,18 +186,17 @@ export default {
 .texto-rodante span {
   display: inline-block;
   padding-left: 100%;
-  animation: mover 60s linear infinite;
+  animation: mover 50s linear infinite;           /* velocidad en la que se mueve el texto rodante  (celedon)*/         
 }
 
 @keyframes mover {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
+  100% { transform: translateX(-100%); }          
 }
 
 .contenedor-menu {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 25px;                       /* espaciado entre botones "iniciar sesion" y "registrarse"  (celedon)*/ 
 }
 
 .boton-sesion, .boton-registro {
@@ -210,8 +206,6 @@ export default {
   color: black;
   cursor: pointer;
   border: none;
-  transition: all 0.3s ease;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
 }
 
 .boton-sesion:hover, .boton-registro:hover {
@@ -235,6 +229,21 @@ export default {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
   padding: 10px;
   z-index: 100;
+
+}
+
+.menuDesplegable ul {
+  padding:5px 2px;
+  cursor:pointer;  
+}
+
+.menuDesplegable ul:hover {
+  background:#f1f5f9;
+}
+
+.txt-dentro-menuHamburguesa {
+  color: black;
+
 }
 
 </style>

@@ -1,25 +1,31 @@
 <template>
   
   <main class="pagina-inicio">
+
     <section class="presentacion-principal">
+
       <div class="capa-oscura"></div>
+
       <div class="bloque-contenido">
+
         <div class="texto-bienvenida">
-          <span class="etiqueta-info">Sistema de Transporte - Santa Marta</span>
-          <h1 class="titulo-gigante">PRONTO</h1>
-          <h2 class="subtitulo-web">Tu ciudad, <span class="resaltado-amarillo">en movimiento.</span></h2>
+          
+          <span class="etiqueta-info">SISTEMA DE TRANSPORTE - SANTA MARTA</span>
+          <h1 class="titulo-pronto">PRONTO</h1>
+          <h2 class="subtitulo-web">Tu ciudad, <span class="resaltado-amarillo">en movimiento</span></h2>
           <p class="parrafo-descripcion">
-            La plataforma inteligente de transporte que conecta a los samarios con su destino. 
-            Localiza tu bus en tiempo real con precisión milimétrica.
-          </p>
+            Moverse por la Perla es más fácil cuando tienes el mapa en tus manos.
+             La tecnología que guía a los samarios directo a su destino, con seguimiento en vivo y sin complicaciones.</p>
+
           <div class="botones-grupo">
+
             <router-link to="/mapa" @click="validacionSesionMapa">
-              <button class="boton-amarillo">
-                <i class='bx bx-map-alt'></i> Explorar Rutas
-              </button>
+              <button class="btn-explorarRutas">Explorar Rutas</button>
             </router-link>
-            <button class="boton-borde">Saber más</button>
+
+            <button class="btn-saberMas">Saber más</button>
           </div>
+
         </div>
         
         <div class="zona-imagen">
@@ -28,16 +34,20 @@
             <div class="efecto-pulso"></div>
           </div>
         </div>
+
       </div>
+
     </section>
 
     <section class="seccion-servicios">
+
       <div class="encabezado-seccion">
         <h2>Tecnología al servicio del ciudadano</h2>
         <div class="linea-decorativa"></div>
       </div>
 
       <div class="contenedor-tarjetas">
+
         <div class="tarjeta-informativa">
           <div class="icono-servicio"><i class='bx bxs-zap'></i></div>
           <h3>Tiempo Real</h3>
@@ -45,7 +55,7 @@
         </div>
 
         <div class="tarjeta-informativa">
-          <div class="icono-servicio"><i class='bx bxs-shield-alt'></i></div>
+          <div class="icono-servicio"><i class=' bx bx-shield-quarter'></i></div>
           <h3>Viaje Seguro</h3>
           <p>Planifica tus rutas con antelación y comparte tu ubicación con seres queridos.</p>
         </div>
@@ -55,10 +65,15 @@
           <h3>Sostenibilidad</h3>
           <p>Menos esperas, rutas más eficientes y una Santa Marta más organizada.</p>
         </div>
+
       </div>
+
     </section>
+
   </main>
+
 </template>
+
 
 <script>
 
@@ -84,22 +99,20 @@ export default {
 
 </script>
 
+
 <style scoped>
-/* Estilos base de la pagina */
-.pagina-inicio {
+
+.pagina-inicio {                              /* estilos base de la pagina (celedon)*/
   font-family: 'Segoe UI', sans-serif;
   background: #0a0f18;
 }
 
-/* Configuracion de la parte superior */
 .presentacion-principal {
   position: relative;
-  min-height: 95vh;
+  min-height: 42rem;
   display: flex;
-  align-items: center;
   padding: 0 10%;
   color: white;
-  overflow: hidden;
 }
 
 .bloque-contenido {
@@ -107,7 +120,6 @@ export default {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  z-index: 5;
 }
 
 .texto-bienvenida { 
@@ -121,16 +133,14 @@ export default {
   border-radius: 30px;
   font-size: 13px;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 1.5px;
 }
 
-.titulo-gigante {
+.titulo-pronto {                      /* titulo grande blanco que dice "pronto" (celedon)*/
   font-size: 85px;
   font-weight: 900;
-  line-height: 1;
   margin: 25px 0 15px;
-  background: linear-gradient(to bottom, #ffffff 50%, #a1a1a1);
+  background: linear-gradient(to bottom, #ffffff 50%, #707070);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -138,7 +148,7 @@ export default {
 .subtitulo-web { 
   font-size: 36px; 
   margin-bottom: 20px; 
-  font-weight: 400; 
+  font-weight: 700; 
 }
 
 .resaltado-amarillo { 
@@ -148,36 +158,32 @@ export default {
 
 .parrafo-descripcion {
   font-size: 18px;
-  color: #a3b1c6;
+  color: #d1d1d1;
   margin-bottom: 45px;
   line-height: 1.6;
+  font-weight: bold;
 }
 
-/* Estilos de botones */
-.botones-grupo { 
+.botones-grupo {               /* aqui se separan los botones "explorar mapa" y "saber mas" (celedon)*/
   display: flex; 
-  gap: 15px; 
+  gap: 35px; 
 }
 
-.boton-amarillo {
+.btn-explorarRutas {
   background: #ffd500;
   color: #1a1a1a;
-  padding: 15px 32px;
+  padding: 15px 27px;
   border-radius: 10px;
-  border: none;
+  border-color: #8b8b8b;
   font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 10px;
   cursor: pointer;
 }
 
-.boton-amarillo:hover {
+.btn-explorarRutas:hover {
   background: rgba(224, 195, 30, 0.973);
-  
 }
 
-.boton-borde {
+.btn-saberMas{
   background: transparent;
   border: 2px solid rgba(255,255,255,0.15);
   color: white;
@@ -188,23 +194,21 @@ export default {
   transition: 0.3s;
 }
 
-.boton-borde:hover {
+.btn-saberMas:hover {
   background: rgba(255,255,255,0.05);
 }
 
-/* Zona derecha - imagen */
-.zona-imagen { 
+.zona-imagen {                    /*mantiene la imagen el bus a la derecha (celedon)*/
   width: 45%; 
 }
 
 .imagen-flotante {
-  width: 100%;
+  width: 110%;
   border-radius: 25px;
-  filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 0px 30px rgba(0, 102, 255, 0.836));       /*borde azul alredor de la imagen del bus (celedon)*/
 }
 
-/* Seccion de tarjetas inferiores */
-.seccion-servicios { 
+.seccion-servicios {                 /* esta es la seccion de tarjetas inferiores (celedon)*/
   padding: 80px 10%; 
   background: #0a0f18; 
 }
