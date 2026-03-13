@@ -1,108 +1,63 @@
 <template>
+  
+  <main class="pagina-inicio">
+    <section class="presentacion-principal">
+      <div class="capa-oscura"></div>
+      <div class="bloque-contenido">
+        <div class="texto-bienvenida">
+          <span class="etiqueta-info">Sistema de Transporte - Santa Marta</span>
+          <h1 class="titulo-gigante">PRONTO</h1>
+          <h2 class="subtitulo-web">Tu ciudad, <span class="resaltado-amarillo">en movimiento.</span></h2>
+          <p class="parrafo-descripcion">
+            La plataforma inteligente de transporte que conecta a los samarios con su destino. 
+            Localiza tu bus en tiempo real con precisión milimétrica.
+          </p>
+          <div class="botones-grupo">
+            <router-link to="/mapa" @click="validacionSesionMapa">
+              <button class="boton-amarillo">
+                <i class='bx bx-map-alt'></i> Explorar Rutas
+              </button>
+            </router-link>
+            <button class="boton-borde">Saber más</button>
+          </div>
+        </div>
+        
+        <div class="zona-imagen">
+          <div class="contenedor-bus">
+            <img src="../assets/imagen-bus.png" alt="Pronto Bus" class="imagen-flotante">
+            <div class="efecto-pulso"></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- HERO ORIGINAL (TU CODIGO) -->
-  <section class="contenido-inicio">
-
-    <div class="contenido-izquierda">
-      <h1>PRONTO</h1>
-      <h2>LOCALIZA TU BUS</h2>
-      <p>
-        Consulta la ubicación de los buses en tiempo real,
-        revisa rutas activas y organiza mejor tu tiempo
-        en el transporte público.
-      </p>
-
-      <router-link to="/mapa" @:click="validacionSesionMapa">
-        <button class="btn-verRutas">Ver rutas</button>
-      </router-link>
-    </div>
-
-    <div class="imagen-bus">
-      <img src="../assets/imagen-bus.png" alt="Imagen bus">
-    </div>
-
-  </section>
-
-
-  <!-- NUEVA SECCION FUNCIONES -->
-  <section class="funciones-pronto">
-
-    <h2>¿Qué puedes hacer con PRONTO?</h2>
-
-    <div class="contenedor-funciones">
-
-      <div class="tarjeta-funcion">
-        <i class='bx bx-map'></i>
-        <h3>Rutas en tiempo real</h3>
-        <p>
-          Visualiza en el mapa las rutas activas del transporte
-          público y observa el recorrido de los buses en vivo.
-        </p>
+    <section class="seccion-servicios">
+      <div class="encabezado-seccion">
+        <h2>Tecnología al servicio del ciudadano</h2>
+        <div class="linea-decorativa"></div>
       </div>
 
-      <div class="tarjeta-funcion">
-        <i class='bx bx-time-five'></i>
-        <h3>Ahorra tiempo</h3>
-        <p>
-          Evita largas esperas en las paradas y planifica
-          mejor tus viajes en la ciudad.
-        </p>
+      <div class="contenedor-tarjetas">
+        <div class="tarjeta-informativa">
+          <div class="icono-servicio"><i class='bx bxs-zap'></i></div>
+          <h3>Tiempo Real</h3>
+          <p>Algoritmos de alta precisión para que sepas exactamente dónde está tu bus cada segundo.</p>
+        </div>
+
+        <div class="tarjeta-informativa">
+          <div class="icono-servicio"><i class='bx bxs-shield-alt'></i></div>
+          <h3>Viaje Seguro</h3>
+          <p>Planifica tus rutas con antelación y comparte tu ubicación con seres queridos.</p>
+        </div>
+
+        <div class="tarjeta-informativa">
+          <div class="icono-servicio"><i class='bx bxs-leaf'></i></div>
+          <h3>Sostenibilidad</h3>
+          <p>Menos esperas, rutas más eficientes y una Santa Marta más organizada.</p>
+        </div>
       </div>
-
-      <div class="tarjeta-funcion">
-        <i class='bx bx-current-location'></i>
-        <h3>Ubicación inteligente</h3>
-        <p>
-          Encuentra fácilmente las rutas cercanas
-          a tu ubicación en Santa Marta.
-        </p>
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- SECCION COMO FUNCIONA -->
-  <section class="como-funciona">
-
-    <h2>¿Cómo funciona?</h2>
-
-    <div class="pasos">
-
-      <div class="paso">
-        <span>1</span>
-        <p>Ingresa al mapa interactivo del sistema.</p>
-      </div>
-
-      <div class="paso">
-        <span>2</span>
-        <p>Selecciona la ruta de transporte que deseas consultar.</p>
-      </div>
-
-      <div class="paso">
-        <span>3</span>
-        <p>Visualiza la ubicación del bus en tiempo real.</p>
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- SECCION BENEFICIOS -->
-  <section class="beneficios-pronto">
-
-    <h2>Movilidad inteligente para la ciudad</h2>
-
-    <p>
-      PRONTO busca mejorar la movilidad urbana permitiendo
-      a los ciudadanos acceder a información clara y actualizada
-      sobre el transporte público de Santa Marta.
-    </p>
-
-  </section>
-
+    </section>
+  </main>
 </template>
 
 <script>
@@ -130,193 +85,185 @@ export default {
 </script>
 
 <style scoped>
+/* Estilos base de la pagina */
+.pagina-inicio {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0a0f18;
+}
 
-/* HERO */
-
-.contenido-inicio {
+/* Configuracion de la parte superior */
+.presentacion-principal {
+  position: relative;
+  min-height: 95vh;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 80vh;
-  background: linear-gradient(120deg,#0f1b2b,#1f3555);
+  padding: 0 10%;
   color: white;
-  padding: 100px;
   overflow: hidden;
 }
 
-.contenido-izquierda {
-  width: 45%;
+.bloque-contenido {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  z-index: 5;
 }
 
-.contenido-izquierda h1 {
-  font-size: 60px;
-  font-weight: bold;
-  letter-spacing: 2px;
+.texto-bienvenida { 
+  max-width: 600px; 
 }
 
-.contenido-izquierda h2 {
-  font-size: 30px;
-  margin-bottom: 20px;
+.etiqueta-info {
+  background: rgba(96, 165, 250, 0.15);
   color: #60a5fa;
+  padding: 7px 16px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
 }
 
-.contenido-izquierda p {
-  font-size: 17px;
-  margin-bottom: 30px;
+.titulo-gigante {
+  font-size: 85px;
+  font-weight: 900;
+  line-height: 1;
+  margin: 25px 0 15px;
+  background: linear-gradient(to bottom, #ffffff 50%, #a1a1a1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitulo-web { 
+  font-size: 36px; 
+  margin-bottom: 20px; 
+  font-weight: 400; 
+}
+
+.resaltado-amarillo { 
+  color: #ffd500; 
+  font-weight: 700; 
+}
+
+.parrafo-descripcion {
+  font-size: 18px;
+  color: #a3b1c6;
+  margin-bottom: 45px;
   line-height: 1.6;
 }
 
-/* BOTON MODERNO */
+/* Estilos de botones */
+.botones-grupo { 
+  display: flex; 
+  gap: 15px; 
+}
 
-.btn-verRutas {
+.boton-amarillo {
   background: #ffd500;
-  padding: 12px 30px;
-  border-radius: 30px;
+  color: #1a1a1a;
+  padding: 15px 32px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
-  font-weight:bold;
-  border:none;
-  transition: all 0.3s ease;
-  box-shadow: 0px 5px 15px rgba(0,0,0,0.25);
 }
 
-.btn-verRutas:hover {
-  transform: translateY(-3px);
-  box-shadow: 0px 10px 20px rgba(0,0,0,0.3);
-  background: #ffe347;
+.boton-amarillo:hover {
+  background: rgba(224, 195, 30, 0.973);
+  
 }
 
-/* IMAGEN BUS */
-
-.imagen-bus {
-  width: 50%;
-  transition: transform 0.5s ease;
+.boton-borde {
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.15);
+  color: white;
+  padding: 15px 32px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.imagen-bus img{
+.boton-borde:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+/* Zona derecha - imagen */
+.zona-imagen { 
+  width: 45%; 
+}
+
+.imagen-flotante {
   width: 100%;
+  border-radius: 25px;
+  filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4));
+}
+
+/* Seccion de tarjetas inferiores */
+.seccion-servicios { 
+  padding: 80px 10%; 
+  background: #0a0f18; 
+}
+
+.encabezado-seccion { 
+  text-align: center; 
+  margin-bottom: 50px; 
+  color: white; 
+}
+
+.encabezado-seccion h2 { 
+  font-size: 36px; 
+}
+
+.linea-decorativa { 
+  width: 50px; 
+  height: 4px; 
+  background: #ffd500; 
+  margin: 15px auto; 
+  border-radius: 10px; 
+}
+
+.contenedor-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.tarjeta-informativa {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px);
+  padding: 45px 35px;
   border-radius: 20px;
-  box-shadow: 0px 20px 40px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: 0.3s ease;
+  color: white;
 }
 
-/* FUNCIONES */
-
-.funciones-pronto{
-  padding: 100px;
-  text-align: center;
-  background: #f1f5f9;
-  background: linear-gradient(120deg,#0f1b2b,#1f3555);
-
+.tarjeta-informativa:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: #ffd500;
+  transform: translateY(-8px);
 }
 
-.funciones-pronto h2{
-  font-size: 34px;
-  margin-bottom: 10px;
+.icono-servicio { 
+  font-size: 40px; 
+  color: #ffd500; 
+  margin-bottom: 20px; 
 }
 
-.contenedor-funciones{
-  display:flex;
-  justify-content:center;
-  gap:40px;
-  margin-top:50px;
-  flex-wrap: wrap;
+.tarjeta-informativa h3 { 
+  font-size: 22px; 
+  margin-bottom: 12px; 
 }
 
-/* TARJETAS MODERNAS */
-
-.tarjeta-funcion{
-  background:white;
-  padding:35px;
-  border-radius:15px;
-  width:260px;
-  box-shadow:0px 10px 25px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  cursor:pointer;
-}
-
-.tarjeta-funcion:hover{
-  transform: translateY(-10px);
-  box-shadow:0px 20px 40px rgba(0,0,0,0.15);
-}
-
-.tarjeta-funcion i{
-  font-size:45px;
-  color:#1e3a8a;
-  margin-bottom:15px;
-}
-
-.tarjeta-funcion h3{
-  margin-bottom:10px;
-}
-
-.tarjeta-funcion p{
-  font-size:14px;
-  line-height:1.5;
-}
-
-
-
-/* COMO FUNCIONA */
-
-.como-funciona{
-  padding:100px;
-  text-align:center;
-  background:white;
-}
-
-.como-funciona h2{
-  font-size:34px;
-}
-
-.pasos{
-  display:flex;
-  justify-content:center;
-  gap:60px;
-  margin-top:50px;
-  flex-wrap: wrap;
-}
-
-.paso{
-  width:200px;
-  transition: transform 0.3s;
-}
-
-.paso:hover{
-  transform: scale(1.05);
-}
-
-.paso span{
-  background:#1e3a8a;
-  color:white;
-  border-radius:50%;
-  padding:14px 20px;
-  font-weight:bold;
-  display:inline-block;
-  margin-bottom:15px;
-  font-size:18px;
-  box-shadow:0px 5px 15px rgba(0,0,0,0.2);
-}
-
-
-
-/* BENEFICIOS */
-
-.beneficios-pronto{
-  background: linear-gradient(120deg,#0f1b2b,#1f3555);
-  color:white;
-  text-align:center;
-  padding:100px;
-}
-
-.beneficios-pronto h2 {
-  font-size:32px;
-  margin-bottom:20px;
-}
-
-.beneficios-pronto p {
-  max-width:700px;
-  margin:auto;
-  line-height:1.6;
-  font-size:17px;
+.tarjeta-informativa p { 
+  color: #9ba7b9; 
+  line-height: 1.5; 
+  font-size: 15px;
 }
 
 </style>

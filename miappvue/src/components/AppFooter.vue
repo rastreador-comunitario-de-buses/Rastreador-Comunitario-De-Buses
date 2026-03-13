@@ -1,4 +1,5 @@
 <template>
+
     <footer id="Contacto" class="footer">
     <div class="footer-contenido">
         <div class="footer-secciones">
@@ -44,6 +45,8 @@
 </script>
 
 <style scoped>
+
+
 
 .footer {
     background-color: #1e3a8a;
