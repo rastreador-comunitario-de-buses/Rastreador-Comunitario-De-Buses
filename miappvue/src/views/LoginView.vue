@@ -15,7 +15,7 @@
             <input type="password" placeholder="Ingrese la contraseña" class="boton2 boton" id="contrasena">
             <a href="#" class="contrasenaO">¿Olvidaste la contraseña?</a>
             <button class="IniciarSesion">Iniciar sesion</button>
-            <p class="regirtrar">¿No tienes cuenta aún? <a class="color_registro">Registrarse</a></p>
+            <p class="regirtrar">¿No tienes cuenta aún? <a class="color_registro" @click="ResgistrarLogin">Registrarse</a></p>
         </div>
     </div>
 
@@ -154,6 +154,7 @@ export default {
 
 .color_registro {
   color: #1387d4;
+  cursor: pointer;
 }
 
 .logo {

@@ -14,7 +14,7 @@
         <p>Buses activos</p>
       </div>
 
-      <div class="mini-carta" v-on:click="verRutasDisponibles">
+      <div class="mini-carta" v-on:click="mostrarBusesActivos">
         <div class="icon">🗺</div>
         <h2>{{ rutasDisponibles }}</h2>
         <p>Rutas disponibles</p>
