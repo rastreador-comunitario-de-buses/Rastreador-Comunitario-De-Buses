@@ -11,10 +11,11 @@ import ReportesView from "@/views/ReportesView.vue"
 import BusesActivosView from "@/views/BusesActivosView.vue"
 
 
+
 const routes = [
   { path: "/", component: HomeView },
   { path: "/mapa", component: MapaView },
-  { path: "/login", component: LoginView },
+  { path: "/login", component: LoginView},
   { path: "/dashboard", component: DashboardView },
   { path: "/perfil", component: PerfilView },
   { path: "/registro", component: RegistroView },
