@@ -1,243 +1,328 @@
 <template>
+  <main class="pantalla-completa">
+    <ToastComponent/>
 
-  <main class="pagina-inicio">
+    <div class="decoracion circulo-1"></div>
+    <div class="decoracion circulo-2"></div>
 
-     <ToastComponent position="top-center"/>
+    <div class="Tarjeta-Login">
+      <div class="encabezado-login">
+        <img src="../assets/logo+tipografia-pronto.png" alt="Logo Pronto" class="logo-img">
+        <span class="badge-login">Acceso Seguro</span>
+        <h1>Bienvenido</h1>
+        <p>Inicia sesión para continuar en el sistema</p>
+      </div>
 
-    <div class="Contenedor">
-        <div class="info">
-            <img src="../assets/logo+tipografia-pronto.png" alt="" class="logo">
-            <p class="frase">Sistema de Transporte Público</p>
+      <div class="formulario-vertical">
+        <div class="campo">
+          <label for="usuario">Usuario</label>
+          <input 
+            type="text" 
+            placeholder="Ingrese el usuario" 
+            class="input-moderno" 
+            id="usuario" 
+            v-model="validar_usuario"
+          >
         </div>
 
-        <div class="login">
-            <h2 class="login_b">Bienvenido</h2>
-            <p class="parrafo_login">Inicia sesión para continuar</p>
-            <input type="text" placeholder="Ingrese el usuario" class="boton1 boton" id="usuario" v-model="validar_usuario">
-            <input type="password" placeholder="Ingrese la contraseña" class="boton2 boton" id="contrasena" v-model="validar_contrasena">
-            <a href="#" class="contrasenaO">¿Olvidaste la contraseña?</a>
-            <button class="IniciarSesion" @click="ValidarLogin">Iniciar sesion</button>
-            <p class="regirtrar">¿No tienes cuenta aún? <a class="color_registro" @click="ResgistrarLogin">Registrarse</a></p>
+        <div class="campo">
+          <label for="contrasena">Contraseña</label>
+          <input 
+            type="password" 
+            placeholder="Ingrese la contraseña" 
+            class="input-moderno" 
+            id="contrasena" 
+            v-model="validar_contrasena"
+          >
+          <a href="#" class="olvido-pass">¿Olvidaste la contraseña?</a>
         </div>
+      </div>
+
+      <div class="footer-acciones">
+        <button class="btn-login-principal" @click="ValidarLogin">
+          Iniciar sesión
+        </button>
+        
+        <div class="divisor">o también</div>
+
+        <button class="btn-secundario-glass" @click="ResgistrarLogin">
+          Crear una cuenta nueva
+        </button>
+      </div>
     </div>
-
   </main>
-
 </template>
 
 <script>
-
 export default {
   name: "LoginView",
-  data(){
-    return{
-      validar_contrasena: "",
+
+  data() {
+    return {
       validar_usuario: "",
-      usuarioEncontrado: false,
-    }
+      validar_contrasena: "",
+    };
   },
+
   methods: {
-  ValidarLogin: function() {
+    ValidarLogin: function() {
 
-    // 1. Limpiamos alertas previas para evitar acumulación
-    this.$toast.removeAllGroups();
+      // esta funcion sirve para que no se repitan las alertas, solo se ve 1 sola
+      this.$toast.removeAllGroups();
 
-    // 2. VALIDACIÓN DE CAMPOS VACÍOS (Nueva sección)
-    if (!this.validar_usuario || !this.validar_contrasena) {
-      this.$toast.add({
-        severity: 'warn',
-        summary: 'Atención',
-        detail: 'Por favor, llene todos los campos',
-        life: 3000
-      });
-      return; // Detenemos la ejecución aquí para que no intente validar el login
-    }
-
-    // 3. Lógica de validación de usuario (Tu código existente)
-    const validarUsuariosExistentes = localStorage.getItem("usurio_sistema");
-    const listaUsuarios = JSON.parse(validarUsuariosExistentes) || [];
-    
-    // Reiniciamos el estado por si falló en intentos anteriores
-    this.usuarioEncontrado = false; 
-
-    for (const usu in listaUsuarios) {
-      const usuarioActual = listaUsuarios[usu];
-      if (this.validar_usuario === usuarioActual.usuario && this.validar_contrasena === usuarioActual.contrasena) {
-        localStorage.setItem('SesionActiva', 'true');
-        this.usuarioEncontrado = true;
-        this.$router.push("/");
-        break;
+      // validacion de campos vacios
+      if (!this.validar_usuario || !this.validar_contrasena) {
+        this.$toast.add({
+          severity: 'warn',
+          summary: 'Campos incompletos',
+          detail: 'Por favor, ingrese su usuario y contraseña',
+          life: 3000
+        });
+        return; // aqui se detiene la ejecucuon
       }
-    }
 
-    // 4. Alerta si después de buscar no se encontró nada
-    if (this.usuarioEncontrado === false) {
-      localStorage.setItem('SesionActiva', 'false');
-      this.$toast.add({
-        severity: 'error',
-        summary: 'Acceso denegado',
-        detail: 'Usuario o contraseña incorrectos',
-        life: 3000
-      });
+      // OBTENCIÓN DE DATOS DEL LOCALSTORAGE
+      const datosGuardados = localStorage.getItem("usurio_sistema");
+      const listaUsuarios = JSON.parse(datosGuardados) || [];
+      
+      // hace la busqueda del usuario (usamos .find para mayor eficiencia)
+      const usuarioValido = listaUsuarios.find(u => 
+        u.usuario === this.validar_usuario && 
+        u.contrasena === this.validar_contrasena
+      );
+
+      if (usuarioValido) {
+        // guardamos estado de sesión activa
+        localStorage.setItem('SesionActiva', 'true');
+        localStorage.setItem('UsuarioLogueado', usuarioValido.usuario);
+
+        // alerta de exito cuando el usuario ingresa corrrectamente al sistema
+        this.$toast.add({
+          severity: 'success',
+          summary: '¡Acceso Concedido!',
+          detail: `Bienvenido de nuevo, ${usuarioValido.usuario}`,
+          life: 3000
+        });
+
+        // redireccion con un pequeño retraso para que vean el mensaje de exito
+        setTimeout(() => {
+          this.$router.push("/");
+        }, 3000);
+
+      } else {
+        localStorage.setItem('SesionActiva', 'false');
+        this.$toast.add({
+          severity: 'error',
+          summary: 'Error de Autenticación',
+          detail: 'El usuario o la contraseña son incorrectos',
+          life: 3000
+        });
+      }
+    },
+
+    ResgistrarLogin: function() {
+      this.$router.push("/registro");
     }
-  },
   }
 }
 </script>
 
+
 <style scoped>
-.pagina-inicio {
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #eef5ff, #dbeafe, #eff6ff);
-  min-height: 100vh;                 /*ocupa el 100% de la altura de la pantalla (celedón)*/
-  display: flex;          
-  justify-content: center; 
-  align-items: center;     
-  width: 100%;          
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
 }
 
-.Contenedor {
+.pantalla-completa {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #0b1120;
+  min-height: calc(100vh - 70px); /* Ajuste para que respete el header */
   display: flex;
-  margin: 0; 
-  height: 68vh;
-  width: 60vw;
-  box-shadow: 0px 4px 20px rgba(0,0,0,0.2);
-  background: #1e3a8a;
-  border-radius: 25px;
-  overflow: hidden;               /*esto hace que las esquinas de los hijos no se salgan (celedón)*/
-}
-
-.info {
-  width: 40%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
   justify-content: center;
-  color: white;
-}  
-
-.login {
-  display: flex;
-  width: 60%;
-  flex-direction: column;
-  background-color: white;
-  border-radius: 25px;
-  justify-content: center;
-}
-
-.login_b {
-  margin: 0px 15px 30px 52px;
-  font-size: 28px;
-  color: #1387d4;
-}
-
-.parrafo_login {
-  margin: 0px 25px 30px 52px;
-  font-size: 20px;
-}
-
-.boton {
-  padding: 13px;
-  border-radius: 8px;
-  margin: 0px 25px 15px 52px;
-  color: black;
-  border: 1px solid #ccc;
-  background: linear-gradient(135deg, #eef5ff, #dbeafe, #eff6ff);
-}
-
-.contrasenaO {
-  margin: 5px 45px 25px 52px;
-  text-decoration: none;
-  color: #1387d4;
-  text-align: end;
-}
-
-.IniciarSesion {
-  margin: 0px 178px ;
-  background: #ffd500;
-  color: #1a1a1a;
-  padding: 15px 27px;
-  border-radius: 10px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;  
-}
-
-.regirtrar {
-  text-align: center;
-  margin-top: 15px;
-}
-
-.color_registro {
-  color: #1387d4;
-  cursor: pointer;
-}
-
-.logo {
-  width: 90%;
-  height: 80px;
+  align-items: center;
+  position: relative;
   overflow: hidden;
-  object-fit: contain;  
+  padding: 20px;
 }
 
-.frase {
-  text-align: center;  
+.decoracion {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 0;
+  opacity: 0.5;
 }
 
-.IniciarSesion:hover {
-  background: rgba(224, 195, 30, 0.973);
+.circulo-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #1387d4 0%, transparent 70%);
+  top: -150px;
+  right: -100px;
 }
 
-@media (max-width: 600px) {
-  .Contenedor{
-    display: flex;
-    flex-direction: column;
-    border-radius: none;
-  }
-    
-  .info {
-    height: 15%;
-    width: 100%;
-  }
-
-  .login {
-    height: 90%;
-    width: 100%;
-  }
-
-  .frase,.nombre {
-    display: none;
-    }
-
-  .contrasenaO{
-    text-align: center;
-  }
-
-  .login_b {
-      text-align: center;
-      margin: 0;
-  }
+.circulo-2 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #ffd50070 0%, transparent 70%);
+  bottom: -200px;
+  left: -150px;
 }
 
-@media (max-width: 860px) {
-  .frase,.nombre{
-    display: none;
-  }
-
-  .logo {
-    text-align: center;
-    margin: 0;
-    width: 90%;
-  }
-
-  .login_b {
-    text-align: center;
-    margin: 0px 0px 30px 0px;
-  }
-
-  .contrasenaO {
-    text-align: center;
-  }
+.Tarjeta-Login {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 40px; 
+  width: 100%;
+  max-width: 600px; 
+  padding: 30px 60px; 
+  color: white;
+  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
 }
 
+.encabezado-login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px; /* Reducido para ahorrar altura */
+}
+
+.logo-img {
+  height: 64px;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.1));
+}
+
+.badge-login {
+  background: rgba(3, 53, 119, 0.349);
+  color: #4f96fa;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 5px;
+}
+
+.encabezado-login p {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.formulario-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;                  /* menos espacio entre inputs */
+  margin-bottom: 25px; 
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+label {
+  font-size: 0.9rem;
+  color: white;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.input-moderno {
+  background: white;
+  border: none;
+  padding: 16px 20px;
+  border-radius: 18px;
+  color: black;
+  font-size: 1rem;
+}
+
+.input-moderno:focus {
+  box-shadow: 0 0 0 4px  rgba(30, 122, 241, 0.671);
+}
+
+.olvido-pass {
+  color:#4f96fa;
+  font-size: 0.85rem;
+  text-align: right;
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.footer-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.btn-login-principal {
+  background: #ffd500;
+  color: #0f172a;
+  border: none;
+  padding: 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-login-principal:hover {
+  background-color: rgba(224, 195, 30, 0.973);
+}
+
+.divisor {
+  display: flex;
+  align-items: center;
+  color: #475569;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  margin: 5px 0;
+}
+
+.divisor::before,
+.divisor::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 0 15px;
+}
+
+.btn-secundario-glass {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  padding: 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.btn-secundario-glass:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
 </style>

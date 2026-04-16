@@ -1,261 +1,328 @@
 <template>
-  <main class="pagina-registro">
-    <ToastComponent position="top-center"/>
-    <div class="Contenedor-registro">
-      
-      <section class="formulario-registro">
-        <h1 class="titulo-registro">Crear cuenta</h1>
-        
-        <div class="grupo-input">
-          <label>Nombre Completo:</label>
-          <input v-model="nuevo_nombre" type="text" placeholder="Ej: Camilo Andrés" class="input-estilo">
-        </div>
+  <main class="pantalla-completa">
+    <ToastComponent/>
 
-        <div class="grupo-input">
-          <label>Nombre de Usuario:</label>
-          <input v-model="nuevo_usuario" type="text" placeholder="Crea un usuario" class="input-estilo">
-        </div>
+    <div class="decoracion circulo-1"></div>
+    <div class="decoracion circulo-2"></div>
 
-        <div class="grupo-input">
-          <label>Correo Electrónico:</label>
-          <input v-model="nuevo_correo" type="email" placeholder="usuario@correo.com" class="input-estilo">
-        </div>
-
-        <div class="grupo-input">
-          <label>Contraseña:</label>
-          <input v-model="nueva_contrasena" type="password" placeholder="••••••••" class="input-estilo">
-        </div>
-
-        <div class="acciones">
-          <button v-on:click="RegistrarUsuario" class="btn-principal">Registrarme</button>
-          <button v-on:click="VolverAlLogin" class="btn-secundario">¿Ya tienes cuenta? Inicia sesión</button>
-        </div>
-      </section>
-
-      <div class="info-registro">
-        <img src="../assets/logo+tipografia-pronto.png" alt="Logo Pronto" class="logo-registro">
-        <p class="frase-registro">Únete a la red de transporte más grande de la ciudad.</p>
+    <div class="Tarjeta-Login">
+      <div class="encabezado-login">
+        <img src="../assets/logo+tipografia-pronto.png" alt="Logo Pronto" class="logo-img">
+        <span class="badge-login">Nuevo Usuario</span>
+        <h1>Crea tu cuenta</h1>
+        <p>Regístrate para comenzar a usar el sistema</p>
       </div>
 
+      <div class="formulario-vertical">
+        <div class="campo">
+          <label for="nuevo_usuario">Usuario</label>
+          <input 
+            type="text" 
+            placeholder="Crea tu nombre de usuario" 
+            class="input-moderno" 
+            id="nuevo_usuario" 
+            v-model="nuevo_usuario"
+          >
+        </div>
+
+        <div class="campo">
+          <label for="nueva_contrasena">Contraseña</label>
+          <input 
+            type="password" 
+            placeholder="Crea tu contraseña" 
+            class="input-moderno" 
+            id="nueva_contrasena" 
+            v-model="nueva_contrasena"
+          >
+        </div>
+      </div>
+
+      <div class="footer-acciones">
+        <button class="btn-login-principal" @click="RegistrarUsuario">
+          Registrarme ahora
+        </button>
+        
+        <div class="divisor">o también</div>
+
+        <button class="btn-secundario-glass" @click="VolverAlLogin">
+          ¿Ya tienes cuenta? Inicia sesión
+        </button>
+      </div>
     </div>
   </main>
 </template>
 
-<script >
-
+<script>
 export default {
-  data(){
-    return{
-
-        nuevo_usuario: "",
-        nuevo_correo: "",
-        nuevo_nombre: "",
-        nueva_contrasena:""
+  data() {
+    return {
+      nuevo_usuario: "",
+      nueva_contrasena: ""
     }
   },
   methods: {
+    RegistrarUsuario: function() {
 
-    
-    //registra el usuario y lo guarda en el localstrorege, tambien validamos que ingresen todos los datos
-    RegistrarUsuario: function(){
-
+      // esta funcion sirve para que no se repitan las alertas, solo se ve 1 sola
       this.$toast.removeAllGroups();
 
-        if(this.nuevo_usuario && this.nueva_contrasena && this.nuevo_correo && this.nuevo_nombre){
-          let usuriosNuevosLista = JSON.parse(localStorage.getItem("usurio_sistema")) || []
-          const nuevosUsuarios = {
-            usuario: this.nuevo_usuario,
-            correo: this.nuevo_correo,
-            nombre: this.nuevo_nombre,
-            contrasena: this.nueva_contrasena,
-          } 
+      // validacion de campos vacios
+      if (!this.nuevo_usuario || !this.nueva_contrasena) {
+        this.$toast.add({ 
+          severity: 'warn', 
+          summary: 'Campos incompletos', 
+          detail: 'Por favor, ingresa un usuario y una contraseña.', 
+          life: 3000 
+        });
+        return; // aqui se detiene la ejecucuon
+      }
 
-          const usuarioExistente =  usuriosNuevosLista.find( us => us.usuario === nuevosUsuarios.usuario);
-          if(usuarioExistente){
-            alert("Ya se registraron con este usuario");
-          }
+      // carecteres minimos para crear la contraseña (4) minimo
+      if (this.nueva_contrasena.length < 4) {
+        this.$toast.add({ 
+          severity: 'error', 
+          summary: 'Contraseña débil', 
+          detail: 'La contraseña debe tener al menos 4 caracteres.', 
+          life: 3000 
+        });
+        return;
+      }
 
-          usuriosNuevosLista.push(nuevosUsuarios);
-          localStorage.setItem("usurio_sistema", JSON.stringify(usuriosNuevosLista))
-          alert("Se registro correctamente")
-          this.$router.push("/login")
+      // logica de almacenamiento en el localstorage
+      let usuariosLista = JSON.parse(localStorage.getItem("usurio_sistema")) || [];
 
-        }
-        else{
-            this.$toast.add({ 
-            severity: 'warn', 
-            summary: 'Atención', 
-            detail: 'Por favor, llene todos los campos', 
-            life: 3000 
-          });
-        }
+      // verifica si un usuario ya existe
+      const usuarioExistente = usuariosLista.find(us => us.usuario === this.nuevo_usuario);
+
+      if (usuarioExistente) {
+        this.$toast.add({ 
+          severity: 'error', 
+          summary: 'Usuario no disponible', 
+          detail: 'Este nombre de usuario ya está registrado.', 
+          life: 3000 
+        });
+      } else {
+        // crear nuevo objeto de usuario
+        const nuevoUsuario = {
+          usuario: this.nuevo_usuario,
+          contrasena: this.nueva_contrasena,
+        };
+
+        // Guardar
+        usuariosLista.push(nuevoUsuario);
+        localStorage.setItem("usurio_sistema", JSON.stringify(usuariosLista));
+
+        // muestra una alerta de exito al crear un usuario
+        this.$toast.add({ 
+          severity: 'success', 
+          summary: '¡Éxito!', 
+          detail: 'Usuario creado correctamente. Redirigiendo...', 
+          life: 4000 
+        });
+
+        // redireccion con un pequeño retraso para que vean el mensaje de exito
+        setTimeout(() => {
+          this.$router.push("/login");
+        }, 4000);
+      }
     },
-    VolverAlLogin: function(){
-        this.$router.push("/login")
+
+    VolverAlLogin: function() {
+      this.$router.push("/login");
     }
   }
 }
 </script>
 
+
+
 <style scoped>
-.pagina-registro {
-  font-family: 'Segoe UI', sans-serif;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
 
-  background: linear-gradient(135deg, #eef5ff, #dbeafe, #eff6ff);
-  height: 100vh;
-
-
+.pantalla-completa {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #0b1120;
+  min-height: calc(100vh - 70px);
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   overflow: hidden;
+  padding: 20px;
+}
+
+.decoracion {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 0;
+  opacity: 0.5;
+}
+
+.circulo-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #1387d4 0%, transparent 70%);
+  top: -150px;
+  right: -100px;
+}
+
+.circulo-2 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #ffd50070 0%, transparent 70%);
+  bottom: -200px;
+  left: -150px;
+}
+
+.Tarjeta-Login {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 40px; 
   width: 100%;
-}
-
-.Contenedor-registro {
+  max-width: 600px; 
+  padding: 30px 60px; 
+  color: white;
+  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
   display: flex;
-  flex-direction: row;
-  height: 72vh; 
-  width: 65vw;
-  max-height: 560px;
-  min-width: 700px;
-  box-shadow: 0px 10px 40px rgba(0,0,0,0.12);
-  background: #1e3a8a; 
-  border-radius: 25px;
-
-  overflow: hidden;
-  margin-top: -30px; 
-}
-
-
-.formulario-registro {
-  display: flex;
-  width: 60% ;
   flex-direction: column;
-  background-color: white;
-  justify-content: center;
-  padding: 25px 50px; 
-
-
 }
 
-.titulo-registro {
-  font-size: 24px;
-  color: #1387d4;
-  margin-bottom: 5px;
-  font-weight: 800;
-
-}
-
-.subtitulo-registro {
-  font-size: 0.9rem;
-
-  color: #666;
+.encabezado-login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   margin-bottom: 20px;
 }
 
-
-.grupo-input {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 12px;
+.logo-img {
+  height: 64px;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.1));
 }
 
-.grupo-input label {
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: #1e3a8a;
-
-  margin-bottom: 4px;
-  margin-left: 2px;
-}
-
-.input-estilo {
-  padding: 11px 15px;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  color: #000000;
-}
-
-.input-estilo:focus {
-  outline: none;
-  border-color: #1387d4;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(19, 135, 212, 0.1);
-}
-
-.acciones {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.btn-principal {
-  background: #ffd500;
-  color: #1a1a1a;
-  padding: 13px;
-  border-radius: 12px;
-  border: none;
+.badge-login {
+  background: rgba(3, 53, 119, 0.349);
+  color: #4f96fa;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.7rem;
   font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 5px;
+}
+
+.encabezado-login p {
+  color: #64748b;
   font-size: 1rem;
-
-  cursor: pointer;
 }
 
-.btn-principal:hover {
-  background: #f5cc00;
-  transform: translateY(-1px);
-}
-
-.btn-secundario {
-  background: none;
-  border: none;
-  color: #1387d4;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-
-  text-decoration: underline;
-  transition: color 0.3s;
-}
-
-.btn-secundario:hover {
-  color: #1e3a8a;
-}
-
-
-.info-registro {
-  width: 40%;
+.formulario-vertical {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  padding: 30px;
-  text-align: center;
-  background: linear-gradient(180deg, #1e3a8a 0%, #162d6b 100%);
+  margin-bottom: 25px;
 }
 
-.logo-registro {
-  width: 85%;
-  max-width: 180px;
-  height: auto;
-  
-  object-fit: contain;
-  margin-bottom: 10px;
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.frase-registro {
+label {
   font-size: 0.9rem;
+  color: white;
+  font-weight: 500;
+  margin-left: 4px;
+}
 
-  line-height: 1.4;
-  padding: 0 10px;
-  font-weight: 400;
-  opacity: 0.9;
+.input-moderno {
+  background: white;
+  border: none;
+  padding: 16px 20px;
+  border-radius: 18px;
+  color: black;
+  font-size: 1rem;
+}
+
+.input-moderno:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(30, 122, 241, 0.671);
+}
+
+.footer-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.btn-login-principal {
+  background: #ffd500;
+  color: #0f172a;
+  border: none;
+  padding: 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-login-principal:hover {
+  background-color: rgba(224, 195, 30, 0.973);
+}
+
+.divisor {
+  display: flex;
+  align-items: center;
+  color: #475569;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  margin: 5px 0;
+}
+
+.divisor::before,
+.divisor::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 0 15px;
+}
+
+.btn-secundario-glass {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  padding: 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.btn-secundario-glass:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 </style>

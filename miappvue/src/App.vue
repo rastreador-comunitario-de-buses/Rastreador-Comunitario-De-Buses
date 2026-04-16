@@ -22,14 +22,14 @@ export default {
 
 <style>
 .p-toast{
-    top: 110px !important;                                    /*ajustar altura del alert*/
+    top: 120px !important;                                    /*ajustar altura del alert*/
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 
 
 .p-toast-detail {
-    color: #475569 !important;                             /* color de la descripcion*/
+    color:white !important;                             /* color de la descripcion*/
 }
  
 </style>
