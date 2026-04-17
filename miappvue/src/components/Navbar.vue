@@ -156,7 +156,7 @@ export default {
 .texto-rodante span {
   display: inline-block;
   padding-left: 100%;
-  animation: mover 50s linear infinite;           /* velocidad en la que se mueve el texto rodante  (celedon)*/         
+  animation: mover 45s linear infinite;           /* velocidad en la que se mueve el texto rodante  (celedon)*/         
 }
 
 @keyframes mover {

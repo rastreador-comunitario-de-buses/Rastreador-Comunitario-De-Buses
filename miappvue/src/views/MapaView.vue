@@ -1,49 +1,48 @@
   <template>
-    <div class="contenedor">
-      <h1>Mapa en tiempo real</h1>
+  <div class="contenedor">
+    <div class="contenedor-titulo">
+      <span class="titulo1">Mapa en Tiempo Real</span>
+    </div>
 
-      <div class="buscador">
-        <input v-model="filtroRuta" @input="buscarRuta" placeholder="🔎 Buscar ruta (ej: SM101)" />
-        <button @click="irAMiUbicacion">📍 Mi ubicación</button>
+    <div class="buscador">
+      <input v-model="filtroRuta" @input="buscarRuta" placeholder="🔎 Buscar ruta (ej: SM101)" />
+      <button @click="irAMiUbicacion">📍 Mi ubicación</button>
+    </div>
+
+    <div class="stats">
+      <div class="mini-carta" v-on:click="mostrarBusesActivos">
+        <div class="icon">🚌</div>
+        <h2>{{ cantidadBuses }}</h2>
+        <p>Buses activos</p>
       </div>
 
-      <div class="stats">
-        <div class="mini-carta" v-on:click="mostrarBusesActivos">
-          <div class="icon">🚌</div>
-          <h2>{{ cantidadBuses }}</h2>
-          <p>Buses activos</p>
-        </div>
-
-        <div class="mini-carta" v-on:click="verRutasDisponibles" >
-          <div class="icon">🗺</div>
-          <h2>{{ rutasDisponibles }}</h2>
-          <p>Rutas disponibles</p>
-        </div>
-      </div>
-
-      <div id="map"></div>
-
-      <div v-if="busSeleccionado" class="panelBus">
-
-        <div class="contenedor-icono-reportes" v-on:click="irAReportes" v-if="confirmarSesionMapa">
-          <i class='bx bx-chat'></i>
-        </div>
-
-        <h2>🚌 Bus {{ busSeleccionado.ruta }}</h2>
-        <p><b>Conductor:</b> {{ busSeleccionado.conductor }}</p>
-        <p><b>Placa:</b> {{ busSeleccionado.placa }}</p>
-        <p><b>Capacidad:</b> {{ busSeleccionado.capacidad }} pasajeros</p>
-        <p><b>Estado:</b> {{ estadoDeLosBuses }}</p>
-
-        <button @click="cerrarPanel">Cerrar</button>
-        <button v-if="confirmarSesionMapa" v-on:click="guardarRuta">Guardar ruta</button>
-
+      <div class="mini-carta" v-on:click="verRutasDisponibles">
+        <div class="icon">🗺</div>
+        <h2>{{ rutasDisponibles }}</h2>
+        <p>Rutas disponibles</p>
       </div>
     </div>
-  </template>
 
-  <script>
+    <div id="map"></div>
 
+    <div v-if="busSeleccionado" class="panelBus">
+      <div class="contenedor-icono-reportes" v-on:click="irAReportes" v-show="confirmarSesionMapa">
+        <i class='bx bx-chat'></i>
+      </div>
+
+      <h2>🚌 Bus {{ busSeleccionado.ruta }}</h2>
+      <p><b>Conductor:</b> {{ busSeleccionado.conductor }}</p>
+      <p><b>Placa:</b> {{ busSeleccionado.placa }}</p>
+      <p><b>Capacidad:</b> {{ busSeleccionado.capacidad }} pasajeros</p>
+      <p><b>Estado:</b> {{ estadoDeLosBuses }}</p>
+
+      <button @click="cerrarPanel">Cerrar</button>
+      <button v-show="confirmarSesionMapa" v-on:click="guardarRuta">Guardar ruta</button>
+    </div>
+  </div>
+</template>
+
+<script>
   import L from "leaflet";
   import "leaflet/dist/leaflet.css";
   import "leaflet-rotatedmarker";
@@ -53,7 +52,6 @@
   import { paradas } from "@/data/paradas.js";
 
   export default {
-
     data() {
       return {
         map: null,
@@ -69,14 +67,6 @@
         usuarioUbicacion: null,
         paradaCercanaMarker: null,
         filtroRuta: "",
-        coloresRuta: [
-          "#2563eb",
-          "#dc2626",
-          "#16a34a",
-          "#9333ea",
-          "#f59e0b",
-          "#0891b2"
-        ]
       }
     },
 
@@ -94,13 +84,13 @@
         { maxZoom: 19 }
       ).addTo(this.map);
 
-      buses.forEach((bus, index) => {
+      buses.forEach((bus) => {
         const codigoBus = bus.ruta.split(' ')[0];
         const ruta = rutas.find(r => r.nombre.startsWith(codigoBus));
         if (!ruta) return;
 
         const busIcon = L.icon({
-          iconUrl: "https://cdn-icons-png.flaticon.com/512/3448/3448339.png",
+          iconUrl: "https://cdn-user-icons.flaticon.com/145514/145514772/1776411842695.svg?token=exp=1776417684~hmac=29c9ec8125cba3772a6b78e1e400498a", // Icono azul
           iconSize: [40, 40],
           iconAnchor: [20, 20]
         });
@@ -118,7 +108,7 @@
           this.confirmarSesionMapa = localStorage.getItem('SesionActiva') === 'true';
           this.busSeleccionado = bus;
           this.estadoDeLosBuses = bus.estado;
-          this.mostrarRuta(ruta, index);
+          this.mostrarRuta(ruta);
           marker.setZIndexOffset(1000);
         });
 
@@ -148,8 +138,7 @@
       });
     },
 
-    methods: {                                        // ← ABRE methods
-
+    methods: {
       mostrarBusesActivos() {
         this.$router.push("/busesActivos")
       },
@@ -167,7 +156,7 @@
         this.map.setView(this.usuarioUbicacion, 16, { animate: true });
       },
 
-      mostrarRuta(ruta, index) {
+      mostrarRuta(ruta) {
         const coordenadas = ruta.puntos.map(p => L.latLng(p[0], p[1]));
 
         if (this.rutaActiva) {
@@ -177,7 +166,8 @@
 
         if (!this.map) return;
 
-        const color = this.coloresRuta[index % this.coloresRuta.length];
+        // Definimos el color fijo directamente aquí
+        const colorRuta = "#1387d4"; 
 
         this.rutaActiva = L.Routing.control({
           waypoints: coordenadas,
@@ -189,7 +179,7 @@
           show: false,
           createMarker: () => null,
           lineOptions: {
-            styles: [{ color: color, weight: 6, opacity: 0.95 }]
+            styles: [{ color: colorRuta, weight: 6, opacity: 0.95 }]
           }
         }).addTo(this.map);
 
@@ -272,16 +262,13 @@
           const actual = puntos[i];
           const siguiente = puntos[(i + 1) % puntos.length];
 
-          // verifica si el bus está cerca de alguna parada (menos de 80 metros)
           const cercaDeParada = paradas.some(p => {
             const distancia = this.map.distance(actual, L.latLng(p.coord[0], p.coord[1]));
             return distancia < 80;
           });
 
-          // actualiza el estado del bus
           bus.estado = cercaDeParada ? "En parada 🛑" : "En movimiento 🚌";
 
-          // si este bus está seleccionado actualiza el estado visible en el panel
           if (this.busSeleccionado && this.busSeleccionado.id === bus.id) {
             this.estadoDeLosBuses = bus.estado;
           }
@@ -349,8 +336,7 @@
         localStorage.setItem('rutasMasUsadas', JSON.stringify(rutasGuardadas));
         alert("✅ Ruta guardada correctamente como: " + nuevaRuta.nombreRuta);
       }
-
-    },                                                // ← CIERRA methods
+    },
 
     beforeUnmount() {
       this.mapaActivo = false;
@@ -365,7 +351,7 @@
           try {
             this.rutaActiva.remove();
           } catch (e) {
-            // intencional: silencia error si la petición HTTP sigue en vuelo
+            // Error silencioso
           }
           this.rutaActiva = null;
         }
@@ -386,223 +372,54 @@
         this.map = null;
       }
     }
-
   }
 </script>
 
 <style scoped>
 .contenedor {
-  min-height: 100vh;
-  padding: 30px;
-  background: linear-gradient(135deg, #eef5ff, #dbeafe, #eff6ff);
-  font-family: 'Segoe UI', sans-serif;
-  position: relative;
+  background-color: #0b1120; 
+  min-height: 100vh; 
+  margin: 0;
+  padding: 30px; 
+  background-attachment: fixed;
+  font-family: 'Inter', sans-serif;
 }
 
-.contenedor::before {
-  content: "";
-  position: absolute;
-  top: -100px;
-  left: -100px;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
-  opacity: 0.15;
-}
-
-.contenedor::after {
-  content: "";
-  position: absolute;
-  bottom: -120px;
-  right: -120px;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, #2563eb 0%, transparent 70%);
-  opacity: 0.15;
-}
-
-h1 {
-  text-align: center;
-  font-weight: 700;
-  color: #1e3a8a;
-  margin-bottom: 25px;
-  letter-spacing: 1px;
-}
-
-.stats {
+.contenedor-titulo {
   display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
-}
-
-.mini-carta {
-  width: 260px;
-  background: white;
-  border-radius: 16px;
-  padding: 20px;
-  text-align: center;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08),
-    0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.mini-carta:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
-}
-
-.icon {
-  font-size: 36px;
-  margin-bottom: 5px;
-}
-
-.mini-carta h2 {
-  font-size: 32px;
-  margin: 6px 0;
-  color: #2563eb;
-}
-
-.mini-carta p {
-  font-size: 14px;
-  color: #64748b;
-}
-
-#map {
-  height: 520px;
+  justify-content: center; 
   width: 100%;
-  border-radius: 18px;
-  overflow: hidden;
-  border: 3px solid #1e40af;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  transition: 0.3s;
-  margin-bottom: 80px;
-  margin-top: 10px;
+  margin-bottom: 45px; /* Espaciado con el buscador */
 }
 
-#map:hover {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-}
-
-.panelBus {
-  position: absolute;
-  top: 130px;
-  right: 25px;
-  width: 280px;
-  background: white;
-  padding: 20px;
-  border-radius: 14px;
-  border-top: 6px solid #2563eb;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-  z-index: 1000;
-  animation: aparecerPanel 0.35s ease;
-  
-}
-
-@keyframes aparecerPanel {
-  from {
-    transform: translateX(40px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.panelBus h2 {
-  color: #1e3a8a;
-  margin-bottom: 12px;
-}
-
-.panelBus p {
-  color: #334155;
-  margin: 6px 0;
-  font-size: 14px;
-}
-
-.panelBus button {
-  width: 100%;
-  margin-top: 10px;
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 9px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.panelBus button:hover {
-  background: #1e40af;
-  transform: scale(1.02);
-}
-
-.panelBus button:last-child {
-  background: #facc15;
-  color: #1e293b;
-}
-
-.panelBus button:last-child:hover {
-  background: #eab308;
-}
-
-.leaflet-tooltip {
-  background: #1e40af;
-  color: white;
-  border: none;
+.titulo1 {
+  background: rgba(3, 53, 119, 0.45);
+  color: #4f96fa;
+  padding: 8px 30px;
+  border-radius: 100px;
+  font-size: 1.5rem;
   font-weight: bold;
-  border-radius: 6px;
-  padding: 4px 8px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: inline-block;
 }
 
-:deep(.leaflet-routing-container) {
-  display: none !important;
-}
-
-.icono-resaltado {
-  filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.7));
-}
-
-.contenedor-icono-reportes {
-  position: absolute;
-  top: -12px;
-  right: -12px;
-  background: #2363eb;
-  color: white;
-  width: 35px;
-  height: 35px;
-  border-radius: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 18px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-}
-
-.contenedor-icono-reportes:hover {
-  background: #1e40af;
-  transform: scale(1.1);
-}
-
+/* Buscador */
 .buscador {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 25px;
 }
 
 .buscador input {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  width: 220px;
+  padding: 2px 18px;
+  border-radius: 18px;
+  border: none;
+  width: 340px;
+  background-color: white;
+  color: black;
+  font-size: 1rem;
 }
 
 .buscador button {
@@ -610,11 +427,143 @@ h1 {
   color: white;
   border: none;
   padding: 10px 14px;
-  border-radius: 8px;
+  border-radius: 18px;
   cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
 .buscador button:hover {
   background: #1e40af;
+}
+
+/* Estadísticas */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.mini-carta {
+  width: 240px;
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.mini-carta:hover {
+  transform: translateY(-5px);
+}
+
+.icon {
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+.mini-carta h2 {
+  font-size: 30px;
+  margin: 5px 0;
+  color: #2563eb;
+}
+
+.mini-carta p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+#map {
+  height: 520px;
+  width: 90%; 
+  margin: 0 auto 50px auto; 
+  border-radius: 20px;
+  overflow: hidden;
+  border: 3px solid #1e7eeb;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Panel del Bus Flotante */
+.panelBus {
+  position: absolute;
+  top: 458px;
+  right: 108px;
+  width: 280px;
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  border-top: 6px solid #2563eb;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.panelBus h2 {
+  color: #1e3a8a;
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+}
+
+.panelBus p {
+  color: #334155;
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.panelBus button {
+  width: 100%;
+  margin-top: 12px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.panelBus button:hover {
+  background: #1e40af;
+}
+
+.panelBus button:last-child {
+  background: #facc15;
+  color: #1e293b;
+}
+
+/* Icono de Reportes */
+.contenedor-icono-reportes {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  background: #2363eb;
+  color: white;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+/* Leaflet y otros */
+:deep(.leaflet-routing-container) {
+  display: none !important;
+}
+
+.leaflet-tooltip {
+  background: #1e40af !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
 }
 </style>
