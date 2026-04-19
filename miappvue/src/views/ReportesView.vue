@@ -19,7 +19,7 @@
 
   <section class="reportes-input-contenedor">
     <div class="input-reporte">
-        <input type="text" placeholder="Escribe aqui" v-model="almacenarReporte">
+        <input type="text" placeholder="Envía tus reportes aquí..." v-model="almacenarReporte">
         <button class="boton-enviar"  v-on:click="guardarReporte">
         <i class='bx bx-send'></i>
       </button>
@@ -160,10 +160,13 @@ export default{
     font-size: 15px;
     outline: none;
     transition: 0.2s;
+    background-color: white;
+    border-color: #2563eb;
+    color: black;
 }
 
 .input-reporte input:focus{
-    border-color: #2563eb;
+    border: 2px solid #00c8fa;
 }
 
 .boton-enviar{

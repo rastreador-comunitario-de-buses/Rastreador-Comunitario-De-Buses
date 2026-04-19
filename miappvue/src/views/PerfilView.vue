@@ -1,11 +1,12 @@
 <template>
+    <ToastComponent/>
   <div class="perfil-view">
     <div class="header-decorativo">
       <div class="avatar-circulo">
         <i class='bx bxs-user'></i>
       </div>
       <h2 class="saludo">Mi Perfil</h2>
-      <p class="subtexto">Gestiona tu cuenta de PRONTO</p>
+      <p class="subtexto">Gestiona tu cuenta</p>
     </div>
 
     <div class="Datos personales">
@@ -62,8 +63,16 @@ export default {
             localStorage.removeItem("usuarioNuevo") 
             localStorage.removeItem("contrasenaNueva")
             localStorage.setItem('SesionActiva', 'false')
-            alert("Ha cerrado sesion")
-            this.$router.push("/")
+            this.$toast.add({ 
+                severity: 'info', 
+                summary: 'Mensaje de información', 
+                detail: 'Usted ha cerrado sesión', 
+                life: 2000 
+            });
+
+            setTimeout(() => {    // redireccion con un pequeño retraso para que vean el mensaje de exito
+                this.$router.push("/");
+            }, 2000);
         },
         accionCancelar: function(){
             this.salirCuenta = false

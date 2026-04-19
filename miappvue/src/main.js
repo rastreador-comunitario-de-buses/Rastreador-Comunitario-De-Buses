@@ -12,6 +12,9 @@ import ToastService from 'primevue/toastservice'
 import Toast from 'primevue/toast'
 import Image from 'primevue/image'
 
+import ProgressSpinner from 'primevue/progressspinner';
+
+
 // Conexión a API
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -35,5 +38,6 @@ app.use(ToastService);
 // 4. Registrar el componente Toast de forma global
 app.component('ToastComponent', Toast);
 app.component('ImageComponent', Image);
+app.component('ProgressSpinner', ProgressSpinner);
 
 app.mount('#app')

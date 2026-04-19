@@ -1,5 +1,20 @@
 <template>
   
+<transition name="fade-blur">
+    <div v-if="cargando" class="pantalla-carga">
+      <div class="escena-animacion">       
+        <div class="logo-carga">
+          <h1 class="texto-pronto">PRONTO</h1>
+          <p class="texto-ciudad">SANTA MARTA</p>
+        </div>
+        <div class="contenedor-movimiento">
+          <img src="../assets/bus-loading.png" class="bus-animado" alt="Bus Pronto">
+          <div class="carretera-linea"></div>
+        </div>
+      </div>
+    </div>
+  </transition>
+
   <main class="pagina-inicio">
 
     <section class="presentacion-principal">
@@ -72,21 +87,34 @@
 
 <script>
 export default {
+  name: 'VistaPrincipal', // Opcional: ayuda a identificar el componente en las DevTools
+  
+  data() {
+    return {
+      // Esta es la variable que controla la pantalla de carga
+      cargando: true 
+    };
+  },
+
+  mounted() {
+    // Apenas el sitio termina de "montarse" en el navegador:
+    // Agregamos un pequeño retraso de 2.5 segundos para que el usuario
+    // pueda apreciar la animación del bus antes de entrar al sitio.
+    setTimeout(() => {
+      this.cargando = false;
+    }, 2500);
+  },
+
   methods: {
     irAlMapa: function() {
-      // 1. Revisamos si hay sesión
+      // Tu lógica existente para el mapa
       const validarSesionActiva = localStorage.getItem('SesionActiva');
 
       if (validarSesionActiva === 'true') {
-        // Usuario logueado: Permitimos guardar rutas y navegamos
         localStorage.setItem('verificarGuardarRuta', 'true');
         this.$router.push("/mapa");
       } else {
-        // Usuario NO logueado: 
         localStorage.setItem('verificarGuardarRuta', 'false');
-
-        
-        // Si quieres que entre al mapa pero sin permisos de guardar:
         this.$router.push("/mapa");
       }
     },
@@ -97,7 +125,94 @@ export default {
 
 <style scoped>
 
-.pagina-inicio {                              /* estilos base de la pagina (celedon)*/
+.pantalla-carga {      /*desde aquí son estilos de progress bar / pantalla de espera (celedon)*/
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #0a0f18; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.escena-animacion {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-carga {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.texto-pronto {
+  color: white;
+  font-size: 3rem;
+  font-weight: 900;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin: 0;
+  background: linear-gradient(to bottom, #ffffff, #666);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.texto-ciudad {
+  color: #60a5fa;
+  letter-spacing: 4px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.contenedor-movimiento {
+  position: relative;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.bus-animado {
+  width: 180px;                /* Ajusta según la imagen */
+  height: auto;
+  z-index: 2;
+  animation: conducirBus 3s linear infinite;   /* velocidad en la que se mueve el bus*/
+}
+
+.carretera-linea {
+  width: 85%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffd500, transparent);
+  box-shadow: 0 0 10px rgba(255, 213, 0, 0.5);
+  margin-top: -10px;
+}
+
+@keyframes conducirBus {          /* aqui se definen los movimientos del bus */
+  0% {
+    transform: translateX(-150%); /* entra por la izquierda */
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(150%); /* sale por la derecha */
+    opacity: 0;
+  }
+}                                              /*aquí terminan los estilos de progress bar / pantalla de espera (celedon)*/
+
+.pagina-inicio {                              /*empiezan los estilos base de la pagina (celedon)*/
   font-family: 'Segoe UI', sans-serif;
   background: #0a0f18;
 }
