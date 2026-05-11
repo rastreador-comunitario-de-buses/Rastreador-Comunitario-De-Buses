@@ -314,8 +314,9 @@ export default {
 }
 
 .boton-aceptar {
-    background: #ef4444;
+    background: #475569;
     color: white;
+    border: solid 2px white;
 }
 
 .boton-cancelar {

@@ -113,6 +113,7 @@ export default {
         const datos = await respuesta.json()
 
         if (!respuesta.ok) {
+          this.$toast.removeAllGroups();
           this.$toast.add({
             severity: 'error',
             summary: 'Error de Autenticación',
@@ -129,7 +130,7 @@ export default {
         }else {
           console.error("El servidor no proporcionó un token de autenticación.")
         }
-
+        this.$toast.removeAllGroups();
         this.$toast.add({
           severity: 'success',
           summary: '¡Acceso Concedido!',
@@ -142,6 +143,7 @@ export default {
         }, 3000)
 
       } catch (error) {
+        this.$toast.removeAllGroups();
         this.$toast.add({
           severity: 'error',
           summary: 'Error',
@@ -164,6 +166,7 @@ export default {
 
     async recuperarContrasena() {
       if (!this.rec_usuario || !this.rec_nueva || !this.rec_confirmar) {
+        this.$toast.removeAllGroups();
         this.$toast.add({
           severity: 'warn',
           summary: 'Campos incompletos',
@@ -194,6 +197,7 @@ export default {
         })
 
         const datos = await respuesta.json()
+        this.$toast.removeAllGroups();
 
         if (!respuesta.ok) {
           this.$toast.add({
@@ -214,6 +218,7 @@ export default {
         this.mostrarRecuperar = false
 
       } catch {
+        this.$toast.removeAllGroups();
         this.$toast.add({
           severity: 'error',
           summary: 'Error',

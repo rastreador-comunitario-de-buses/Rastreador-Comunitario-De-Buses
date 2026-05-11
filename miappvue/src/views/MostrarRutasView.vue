@@ -154,9 +154,10 @@ export default {
 }
 
 .btn-borrar{
-    background: #f1f5f9;
+    background: #ecececbe;
     color: #dc2626;
-    border: 1px solid #dc2626;
+    border: 2px solid #dc2626 !important;
+    font-weight: bold;
 }
 
 .btn-borrar:hover {

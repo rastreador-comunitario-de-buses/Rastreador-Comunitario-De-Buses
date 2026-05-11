@@ -1,37 +1,32 @@
 <template>
-    <div v-if="cargando" class="pantalla-carga">
-      <div class="escena-animacion">       
-        <div class="logo-carga">
-          <h1 class="texto-pronto">PRONTO</h1>
-          <p class="texto-ciudad">SANTA MARTA</p>
-        </div>
-        <div class="contenedor-movimiento">
-          <img src="../assets/bus-loading.png" class="bus-animado" alt="Bus Pronto">
-          <div class="carretera-linea"></div>
-        </div>
+  <div v-if="cargando" class="pantalla-carga">
+    <div class="escena-animacion">       
+      <div class="logo-carga">
+        <h1 class="texto-pronto">PRONTO</h1>
+        <p class="texto-ciudad">SANTA MARTA</p>
+      </div>
+      <div class="contenedor-movimiento">
+        <img src="../assets/bus-loading.png" class="bus-animado" alt="Bus Pronto">
+        <div class="carretera-linea"></div>
       </div>
     </div>
+  </div>
 
   <main class="pagina-inicio">
-
     <section class="presentacion-principal">
-
       <div class="capa-oscura"></div>
-
       <div class="bloque-contenido">
-
         <div class="texto-bienvenida">
-          
           <span class="etiqueta-info">SISTEMA DE TRANSPORTE - SANTA MARTA</span>
           <h1 class="titulo-pronto">PRONTO</h1>
           <h2 class="subtitulo-web">Tu ciudad, <span class="resaltado-amarillo">en movimiento</span></h2>
           <p class="parrafo-descripcion">
             Moverse por la Perla es más fácil cuando tienes el mapa en tus manos.
-             La tecnología que guía a los samarios directo a su destino, con seguimiento en vivo y sin complicaciones.</p>
-
+            La tecnología que guía a los samarios directo a su destino, con seguimiento en vivo y sin complicaciones.
+          </p>
           <div class="botones-grupo">
             <button @click="irAlMapa" class="btn-explorarRutas">Explorar rutas</button>
-            <button class="btn-saberMas">Saber más</button>
+            <button @click="irANoticias" class="btn-verNoticias">Ver noticias</button>
           </div>
         </div>
         
@@ -41,13 +36,10 @@
             <div class="efecto-pulso"></div>
           </div>
         </div>
-
       </div>
-
     </section>
 
     <section class="seccion-servicios">
-
       <div class="encabezado-seccion">
         <h2>Tecnología al servicio del ciudadano</h2>
         <div class="linea-decorativa"></div>
@@ -55,19 +47,22 @@
 
       <div class="contenedor-tarjetas">
 
-        <div class="tarjeta-informativa">
-          <div class="icono-servicio"><i class=' bx bx-stopwatch'></i></div>
+        <div class="tarjeta-informativa" v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000' }"
+    style="opacity: 0;">
+          <div class="icono-servicio"><i class='bx bx-stopwatch'></i></div>
           <h3>Tiempo Real</h3>
           <p>Algoritmos de alta precisión para que sepas exactamente dónde está tu bus cada segundo.</p>
         </div>
 
-        <div class="tarjeta-informativa">
-          <div class="icono-servicio"><i class=' bx bx-shield-quarter'></i></div>
+        <div class="tarjeta-informativa" v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-75 animate-duration-1000' }"
+    style="opacity: 0;">
+          <div class="icono-servicio"><i class='bx bx-shield-quarter'></i></div>
           <h3>Viaje Seguro</h3>
           <p>Planifica tus rutas con antelación y comparte tu ubicación con seres queridos.</p>
         </div>
 
-        <div class="tarjeta-informativa">
+        <div class="tarjeta-informativa" v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000' }"
+    style="opacity: 0;">
           <div class="icono-servicio"><i class='bx bxs-leaf'></i></div>
           <h3>Sostenibilidad</h3>
           <p>Menos esperas, rutas más eficientes y una Santa Marta más organizada.</p>
@@ -75,14 +70,45 @@
 
       </div>
 
+    <section class="aliados-section">
+      <div class="banner-azul">RESPALDADOS POR LAS INSTITUCIONES QUE CUIDAN TU CAMINO</div>
+      
+      <div class="carrusel-contenedor">
+        <div class="carrusel-track">
+
+          <div class="logo-item"><img src="../assets/500años.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/alcaldia.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/policia.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/logo-cbn.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/sena.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/unimag.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/setp.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/minitransporte.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/gov.co.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/contraloria.png" alt="Empresa"></div>
+
+          <div class="logo-item"><img src="../assets/500años.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/alcaldia.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/policia.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/logo-cbn.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/sena.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/unimag.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/setp.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/minitransporte.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/gov.co.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/contraloria.png" alt="Empresa"></div>
+        </div>
+      </div>
     </section>
 
+    </section>
   </main>
-
 </template>
 
 
 <script>
+
+
 export default {
   data() {
     return {
@@ -108,6 +134,10 @@ export default {
         this.$router.push("/mapa");
       }
     },
+
+    irANoticias() {
+      this.$router.push("/noticias");
+    }
   }
 }
 </script>
@@ -200,7 +230,8 @@ export default {
     transform: translateX(150%); /* sale por la derecha */
     opacity: 0;
   }
-}                                              /*aquí terminan los estilos de progress bar / pantalla de espera (celedon)*/
+}   
+                                           /*aquí terminan los estilos de progress bar / pantalla de espera (celedon)*/
 
 .pagina-inicio {                              /*empiezan los estilos base de la pagina (celedon)*/
   font-family: 'Segoe UI', sans-serif;
@@ -283,7 +314,7 @@ export default {
   background: rgba(224, 195, 30, 0.973);
 }
 
-.btn-saberMas{
+.btn-verNoticias{
   background: transparent;
   border: 2px solid rgba(255,255,255,0.15);
   color: white;
@@ -294,7 +325,7 @@ export default {
   transition: 0.3s;
 }
 
-.btn-saberMas:hover {
+.btn-verNoticias:hover {
   background: rgba(255,255,255,0.05);
 }
 
@@ -350,7 +381,8 @@ export default {
 
 
 
-.seccion-servicios {                 /* esta es la seccion de tarjetas inferiores (celedon)*/
+/* --- SECCIÓN SERVICIOS --- */
+.seccion-servicios {
   padding: 80px 10%; 
   background: #0a0f18; 
 }
@@ -385,8 +417,14 @@ export default {
   padding: 45px 35px;
   border-radius: 20px;
   border: 1px solid rgba(255,255,255,0.06);
-  transition: 0.3s ease;
   color: white;
+  
+  /* Quitamos opacity: 0 de aquí para evitar conflictos */
+  /* La transición se mantiene solo para los efectos de hover */
+  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+  
+  /* Asegura que la animación de PrimeFlex sea la que mande */
+  animation-fill-mode: both;
 }
 
 .tarjeta-informativa:hover {
@@ -410,6 +448,136 @@ export default {
   color: #9ba7b9; 
   line-height: 1.5; 
   font-size: 15px;
+}
+
+.animate-enter {
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);         /* Clase base que activa la animación */
+}
+
+.animate-duration-1000 {                      /* Duración estándar */
+    animation-duration: 1000ms;
+}
+
+.fade-in-10.zoom-in-50 {
+    animation-name: fadeZoomIn;
+}
+
+@keyframes fadeZoomIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5); /* zoom-in-50 */
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.fade-in-10.zoom-in-75 {
+    animation-name: fadeZoomIn75;
+}
+
+@keyframes fadeZoomIn75 {
+    0% {
+        opacity: 0;
+        transform: scale(0.75);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.aliados-section {      /* logos aliados */
+  padding: 60px 0;
+  margin-top: 80px;
+  width: 100%;
+}
+
+.banner-azul {              /* franja azul con texto texto  */
+  background: #1387d4;   
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  max-width: 85%;
+  margin: 0 auto 40px;
+  border-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0, 113, 206, 0.3);
+}
+
+.carrusel-contenedor {
+  width: 100%;
+  height: 120px;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);      /* fondo sutil para que no sea un blanco puro */
+  display: flex;
+  align-items: center;
+}
+
+.carrusel-contenedor::before,
+.carrusel-contenedor::after {         /* sombreado difuminado en los laterales para efecto de aparición suave */
+  content: "";
+  height: 100%;
+  position: absolute;
+  width: 150px;
+  z-index: 2;
+}
+
+.carrusel-contenedor::before {
+  left: 0;
+  background: linear-gradient(to right, #0a0f18 0%, rgba(10, 15, 24, 0) 100%);
+}
+
+.carrusel-contenedor::after {
+  right: 0;
+  background: linear-gradient(to left, #0a0f18 0%, rgba(10, 15, 24, 0) 100%);
+}
+
+.carrusel-track {       /* animacion del track */
+  display: flex;
+  width: calc(250px * 22);   /* 250px multiplicado por el total de logos (22) */
+  animation: scroll-infinito 35s linear infinite; 
+}
+
+.logo-item {
+  width: 250px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.logo-item img {
+  max-width: 180px;
+  max-height: 70px;
+  object-fit: contain;
+  transition: all 0.4s ease;
+}
+
+@keyframes scroll-infinito {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-250px * 11));   /* (11 logos) */
+  }
+}
+
+@media (max-width: 768px) {     /* ajuste para celulares */
+  .banner-azul {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+  .carrusel-track {
+    animation-duration: 15s;
+  }
 }
 
 </style>

@@ -9,6 +9,7 @@ import RegistroView from "@/views/RegistroView.vue"
 import MostrarRutasView from "@/views/MostrarRutasView.vue"
 import ReportesView from "@/views/ReportesView.vue"
 import BusesActivosView from "@/views/BusesActivosView.vue"
+import NoticiasView from "@/views/NoticiasView.vue"
 
 
 
@@ -22,6 +23,7 @@ const routes = [
   { path: "/administrarRutas", component: MostrarRutasView },
   { path: "/reportes", component: ReportesView },
   { path: "/busesActivos", component: BusesActivosView },
+  { path: "/noticias", component: NoticiasView }
 ]
 
 const router = createRouter({

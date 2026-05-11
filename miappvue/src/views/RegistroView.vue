@@ -138,6 +138,7 @@ export default {
         }, 4000)
 
       } catch (error) {
+        this.$toast.removeAllGroups();
         this.$toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo conectar con el servidor.', life: 3000 })
       }
     },

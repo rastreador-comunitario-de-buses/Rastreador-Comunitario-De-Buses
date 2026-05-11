@@ -15,6 +15,8 @@ import Image from 'primevue/image'
 import ProgressSpinner from 'primevue/progressspinner';
 import Dialog from 'primevue/dialog';
 import Checkbox from 'primevue/checkbox';
+import AnimateOnScroll from 'primevue/animateonscroll';
+
 
 
 
@@ -41,5 +43,6 @@ app.component('ImageComponent', Image);
 app.component('ProgressSpinner', ProgressSpinner);
 app.component('DialogComponent', Dialog);
 app.component('CheckBox', Checkbox);
+app.directive('animateonscroll', AnimateOnScroll);
 
 app.mount('#app')
