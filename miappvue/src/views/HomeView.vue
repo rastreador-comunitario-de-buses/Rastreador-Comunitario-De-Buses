@@ -76,27 +76,29 @@
       <div class="carrusel-contenedor">
         <div class="carrusel-track">
 
-          <div class="logo-item"><img src="../assets/500años.png" alt="Empresa"></div>
+          
+          <div class="logo-item"><img src="../assets/setp.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/alcaldia.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/policia.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/logo-cbn.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/cbn-master.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/gaira-gourmet.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/sena.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/unimag.png" alt="Empresa"></div>
-          <div class="logo-item"><img src="../assets/setp.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/minitransporte.png" alt="Empresa"></div>
-          <div class="logo-item"><img src="../assets/gov.co.png" alt="Empresa"></div>
   
-          <div class="logo-item"><img src="../assets/500años.png" alt="Empresa"></div>
+
+          <div class="logo-item"><img src="../assets/setp.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/alcaldia.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/policia.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/logo-cbn.png" alt="Empresa"></div>
+          <div class="logo-item"><img src="../assets/cbn-master.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/gaira-gourmet.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/sena.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/unimag.png" alt="Empresa"></div>
-          <div class="logo-item"><img src="../assets/setp.png" alt="Empresa"></div>
           <div class="logo-item"><img src="../assets/minitransporte.png" alt="Empresa"></div>
-          <div class="logo-item"><img src="../assets/gov.co.png" alt="Empresa"></div>
+
+
         </div>
       </div>
     </section>
@@ -522,6 +524,8 @@ export default {
   margin: 0 auto 40px;
   border-radius: 4px;
   box-shadow: 0 4px 15px rgba(0, 113, 206, 0.3);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%); /* compatibilidad con iphone, safari y navegadores antiguos*/
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%); /* estandar para navegadores modernos */
 }
 
 .carrusel-contenedor {
@@ -581,7 +585,7 @@ export default {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-250px * 11));   /* (11 logos) */
+    transform: translateX(calc(-250px * 9));   /* (11 logos) */
   }
 }
 

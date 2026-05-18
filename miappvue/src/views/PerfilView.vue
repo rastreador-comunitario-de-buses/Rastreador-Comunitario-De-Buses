@@ -316,7 +316,6 @@ export default {
 .boton-aceptar {
     background: #475569;
     color: white;
-    border: solid 2px white;
 }
 
 .boton-cancelar {

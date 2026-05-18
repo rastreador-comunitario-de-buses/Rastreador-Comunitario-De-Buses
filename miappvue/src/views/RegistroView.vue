@@ -2,9 +2,6 @@
   <main class="pantalla-completa">
     <ToastComponent/>
 
-    <div class="decoracion circulo-1"></div>
-    <div class="decoracion circulo-2"></div>
-
     <div class="Tarjeta-Login">
       <div class="encabezado-login">
         <img src="../assets/logo+tipografia-pronto.png" alt="Logo Pronto" class="logo-img">
@@ -169,47 +166,21 @@ export default {
   align-items: center;
   position: relative;
   overflow: hidden;
-  padding: 20px;
-}
-
-.decoracion {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  z-index: 0;
-  opacity: 0.5;
-}
-
-.circulo-1 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #1387d4 0%, transparent 70%);
-  top: -150px;
-  right: -100px;
-}
-
-.circulo-2 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, #ffd50070 0%, transparent 70%);
-  bottom: -200px;
-  left: -150px;
+  padding: 17px;
+  background-image: url('../assets/fondo-login.png');  
+  background-size: cover;   /* se asegura que la imagen cubra todo el contenedor */
+  background-position: left 11%;
 }
 
 .Tarjeta-Login {
   position: relative;
   z-index: 1;
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(30px) saturate(180%);
+  background: rgb(3, 24, 53);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 40px; 
   width: 100%;
   max-width: 600px; 
   padding: 30px 60px; 
-  color: white;
-  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
-  display: flex;
-  flex-direction: column;
 }
 
 .encabezado-login {
