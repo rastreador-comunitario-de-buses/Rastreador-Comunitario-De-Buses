@@ -59,10 +59,14 @@ export default {
 
         async cargarReportes() {
             try {
-                const respuesta = await fetch('http://localhost:3000/reportes')
-                this.listaReportes = await respuesta.json()
+                const token = localStorage.getItem('token')
+                const respuesta = await fetch('http://localhost:3000/reportes', {
+                    headers: { 'Authorization': `Bearer ${token}` }}
+                )
+                const datos = await respuesta.json()
+                this.listaReportes = Array.isArray(datos) ? datos : []
             } catch {
-                console.log('Error al cargar reportes')
+                console.log("Error al cargar los reportes")
             }
         },
 
@@ -72,9 +76,13 @@ export default {
                 return
             }
             try {
+                const token = localStorage.getItem('token')
                 await fetch('http://localhost:3000/reportes', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
                     body: JSON.stringify({
                         usuario: this.usuarioMostrar,
                         mensaje: this.almacenarReporte
@@ -83,11 +91,12 @@ export default {
                 this.almacenarReporte = ""
                 await this.cargarReportes()
             } catch {
-                alert("Error al enviar el reporte")
+                console.log("Error al enviar el reporte")
             }
         }
     }
 }
+
 </script>
 
 <style scoped>
